@@ -8,7 +8,7 @@ type Props = {
 
 const TaskTile = ({ task }: Props) => {
   return (
-    <div className="bg-darkTiles mb-4 text-left p-4 rounded-lg">
+    <div className="bg-darkTiles mb-4 text-left p-4 rounded-lg shadow-subtextColor shadow">
       <p className="text-darkModeTitle">{task.title}</p>
       <p className="text-subtextColor">{getCompletedSubtasks(task.subtasks)}</p>
     </div>
