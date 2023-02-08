@@ -6,7 +6,7 @@ export const getCompletedSubtasks = (subtasks: Subtask[]) => {
     return subtasks.isCompleted === true;
   });
   const lenghtOfCompletedSubtasks = completedSubtasks.length;
-  return `${lenghtOfCompletedSubtasks} of ${completedSubtasks.length} subtask${
+  return `${lenghtOfCompletedSubtasks} of ${lengthOfSubtasks} subtask${
     lengthOfSubtasks > 1 ? "s" : ""
   }`;
 };
