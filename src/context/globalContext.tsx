@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import data from "../data/data.json";
 import { AppDataType, Board } from "../types/types";
 
@@ -21,6 +21,10 @@ const AppProvider = ({ children }: ProviderProps) => {
   const [currentBoard, setCurrentBoard] = useState(
     appData.boards[currentBoardIndex]
   );
+
+  useEffect(() => {
+    setCurrentBoard(appData.boards[currentBoardIndex]);
+  }, [currentBoardIndex]);
 
   return (
     <AppContext.Provider

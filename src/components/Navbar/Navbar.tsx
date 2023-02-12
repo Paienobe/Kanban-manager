@@ -5,12 +5,17 @@ import addIcon from "../../assets/icon-add-task-mobile.svg";
 import moreIcon from "../../assets/icon-vertical-ellipsis.svg";
 import downIcon from "../../assets/icon-chevron-down.svg";
 
-const Navbar = () => {
+type Props = {
+  showBoardsModal: boolean;
+  setShowBoardsModal: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
   const { appData, currentBoardIndex, currentBoard } = useGlobalContext()!;
   const currentBoardName = currentBoard.name;
 
   return (
-    <div className="p-4 py-6 bg-darkTiles flex items-center justify-between">
+    <div className="p-4 py-6 bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30">
       <div className="w-[10%]">
         <img src={mobileLogo} alt="" />
       </div>
@@ -19,7 +24,16 @@ const Navbar = () => {
         <h1 className="text-left text-darkModeTitle font-bold text-xl mr-2">
           {currentBoardName}
         </h1>
-        <img src={downIcon} alt="" />
+        <img
+          src={downIcon}
+          className={`transition-all duration-300 ${
+            showBoardsModal && "rotate-180"
+          }`}
+          alt=""
+          onClick={() => {
+            setShowBoardsModal(true);
+          }}
+        />
       </div>
 
       <div className="w-[20%] flex items-center justify-between">

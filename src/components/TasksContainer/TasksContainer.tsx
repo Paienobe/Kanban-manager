@@ -14,10 +14,10 @@ const TasksContainer = () => {
     "#c36e6e",
   ];
   return (
-    <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto h-full">
+    <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
       {currentBoard.columns.map((column, index) => {
         return (
-          <div key={column.id} className="min-w-[90%]">
+          <div key={column.id} className="min-w-[90%] mt-[80px]">
             <div className="flex items-center">
               <MdCircle color={columnHexCodes[index]} />
               <p className="text-subtextColor text-left ml-2">
