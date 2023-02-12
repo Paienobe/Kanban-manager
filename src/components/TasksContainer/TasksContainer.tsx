@@ -2,9 +2,10 @@ import React from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import TaskTile from "../TaskTiles/TaskTile";
 import { MdCircle } from "react-icons/md";
+import TaskModal from "../TaskModal/TaskModal";
 
 const TasksContainer = () => {
-  const { currentBoard } = useGlobalContext()!;
+  const { currentBoard, selectedTask } = useGlobalContext()!;
   const columnHexCodes = [
     "#49C4E5",
     "#635fc7",
@@ -31,6 +32,7 @@ const TasksContainer = () => {
           </div>
         );
       })}
+      {selectedTask && <TaskModal />}
     </div>
   );
 };

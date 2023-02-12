@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import data from "../data/data.json";
-import { AppDataType, Board } from "../types/types";
+import { AppDataType, Board, Task } from "../types/types";
 
 type ContextType = {
   appData: AppDataType;
@@ -9,6 +9,8 @@ type ContextType = {
   setCurrentBoardIndex: React.Dispatch<React.SetStateAction<number>>;
   currentBoard: Board;
   setCurrentBoard: React.Dispatch<React.SetStateAction<Board>>;
+  selectedTask: Task | null;
+  setSelectedTask: React.Dispatch<React.SetStateAction<Task | null>>;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -21,6 +23,7 @@ const AppProvider = ({ children }: ProviderProps) => {
   const [currentBoard, setCurrentBoard] = useState(
     appData.boards[currentBoardIndex]
   );
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   useEffect(() => {
     setCurrentBoard(appData.boards[currentBoardIndex]);
@@ -35,6 +38,8 @@ const AppProvider = ({ children }: ProviderProps) => {
         setCurrentBoardIndex,
         currentBoard,
         setCurrentBoard,
+        selectedTask,
+        setSelectedTask,
       }}
     >
       {children}
