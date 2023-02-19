@@ -41,6 +41,7 @@ const TasksContainer = () => {
           </div>
         );
       })}
+
       {showViewModal && (
         <TaskModal
           showViewModal={showViewModal}
