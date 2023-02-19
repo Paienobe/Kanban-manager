@@ -6,9 +6,11 @@ export const getCompletedSubtasks = (subtasks: Subtask[]) => {
     return subtasks.isCompleted === true;
   });
   const lenghtOfCompletedSubtasks = completedSubtasks.length;
-  return `${lenghtOfCompletedSubtasks} of ${lengthOfSubtasks} subtask${
-    lengthOfSubtasks > 1 ? "s" : ""
-  }`;
+  const results = {
+    completed: lenghtOfCompletedSubtasks,
+    total: lengthOfSubtasks,
+  };
+  return results;
 };
 
 export const detectOutsideClick = (

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import TaskTile from "../TaskTiles/TaskTile";
 import { MdCircle } from "react-icons/md";
+import TaskModal from "../TaskModal/TaskModal";
 
 const TasksContainer = () => {
-  const { currentBoard } = useGlobalContext()!;
+  const { currentBoard, selectedTask } = useGlobalContext()!;
   const columnHexCodes = [
     "#49C4E5",
     "#635fc7",
@@ -13,6 +14,13 @@ const TasksContainer = () => {
     "#2a3fdb",
     "#c36e6e",
   ];
+  const [taskIsSelected, setTaskIsSelected] = useState(false);
+  useEffect(() => {
+    if (selectedTask) {
+      setTaskIsSelected(true);
+    }
+  }, [selectedTask]);
+
   return (
     <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
       {currentBoard.columns.map((column, index) => {
@@ -31,6 +39,12 @@ const TasksContainer = () => {
           </div>
         );
       })}
+      {taskIsSelected && (
+        <TaskModal
+          taskIsSelected={taskIsSelected}
+          setTaskIsSelected={setTaskIsSelected}
+        />
+      )}
     </div>
   );
 };

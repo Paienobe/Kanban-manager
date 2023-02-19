@@ -14,6 +14,9 @@ module.exports = {
         purple: "#635fc7",
         red: "#ea5555",
       },
+      transitionTimingFunction: {
+        smooth: "cubic-bezier(0, 1, 0, 1)",
+      },
     },
   },
   plugins: [],
