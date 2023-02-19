@@ -7,11 +7,11 @@ import checkMark from "../../assets/icon-check.svg";
 import downIcon from "../../assets/icon-chevron-down.svg";
 
 type Props = {
-  taskIsSelected: boolean;
-  setTaskIsSelected: React.Dispatch<React.SetStateAction<boolean>>;
+  showViewModal: boolean;
+  setShowViewModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const TaskModal = ({ taskIsSelected, setTaskIsSelected }: Props) => {
+const TaskModal = ({ showViewModal, setShowViewModal }: Props) => {
   const { selectedTask, currentBoard } = useGlobalContext()!;
   const completedSubtasks = getCompletedSubtasks(
     selectedTask!.subtasks
@@ -27,7 +27,7 @@ const TaskModal = ({ taskIsSelected, setTaskIsSelected }: Props) => {
     <div
       className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
       onClick={(e) => {
-        detectOutsideClick(e, modalRef, taskIsSelected, setTaskIsSelected);
+        detectOutsideClick(e, modalRef, showViewModal, setShowViewModal);
       }}
     >
       <div

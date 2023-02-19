@@ -5,7 +5,7 @@ import { MdCircle } from "react-icons/md";
 import TaskModal from "../TaskModal/TaskModal";
 
 const TasksContainer = () => {
-  const { currentBoard, selectedTask } = useGlobalContext()!;
+  const { currentBoard } = useGlobalContext()!;
   const columnHexCodes = [
     "#49C4E5",
     "#635fc7",
@@ -14,12 +14,8 @@ const TasksContainer = () => {
     "#2a3fdb",
     "#c36e6e",
   ];
-  const [taskIsSelected, setTaskIsSelected] = useState(false);
-  useEffect(() => {
-    if (selectedTask) {
-      setTaskIsSelected(true);
-    }
-  }, [selectedTask]);
+
+  const [showViewModal, setShowViewModal] = useState(false);
 
   return (
     <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
@@ -34,15 +30,22 @@ const TasksContainer = () => {
             </div>
             ;
             {column.tasks.map((task) => {
-              return <TaskTile key={task.id} task={task} />;
+              return (
+                <TaskTile
+                  key={task.id}
+                  task={task}
+                  setShowViewModal={setShowViewModal}
+                />
+              );
             })}
           </div>
         );
       })}
-      {taskIsSelected && (
+
+      {showViewModal && (
         <TaskModal
-          taskIsSelected={taskIsSelected}
-          setTaskIsSelected={setTaskIsSelected}
+          showViewModal={showViewModal}
+          setShowViewModal={setShowViewModal}
         />
       )}
     </div>
