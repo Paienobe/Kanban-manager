@@ -27,3 +27,8 @@ export type Board = {
 export type AppDataType = {
   boards: Board[];
 };
+
+export type SelectedTask = {
+  id : string | number
+  status:string
+}

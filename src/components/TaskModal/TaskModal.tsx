@@ -5,23 +5,96 @@ import { detectOutsideClick, getCompletedSubtasks } from "../../utils/utils";
 import uuid from "react-uuid";
 import checkMark from "../../assets/icon-check.svg";
 import downIcon from "../../assets/icon-chevron-down.svg";
+import {
+  AppDataType,
+  Board,
+  SelectedTask,
+  Subtask,
+  Task,
+} from "../../types/types";
 
 type Props = {
   showViewModal: boolean;
   setShowViewModal: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedTask: SelectedTask;
 };
 
-const TaskModal = ({ showViewModal, setShowViewModal }: Props) => {
-  const { selectedTask, currentBoard } = useGlobalContext()!;
+const TaskModal = ({
+  showViewModal,
+  setShowViewModal,
+  selectedTask,
+}: Props) => {
+  const { currentBoard, setAppData, appData } = useGlobalContext()!;
+
+  const currentColumn = currentBoard.columns.find((column) => {
+    return column.tasks.find((task) => {
+      return task.id === selectedTask!.id;
+    });
+  });
+
+  const viewedTask = currentColumn?.tasks.find((task) => {
+    return task.id === selectedTask.id;
+  });
+
   const completedSubtasks = getCompletedSubtasks(
-    selectedTask!.subtasks
+    viewedTask!.subtasks
   ).completed;
-  const totalSubtasks = getCompletedSubtasks(selectedTask!.subtasks).total;
+
+  const totalSubtasks = getCompletedSubtasks(viewedTask!.subtasks).total;
+
   const availableStatuses = currentBoard.columns.map((column) => {
     return column.name;
   });
+
   const [showStatuses, setShowStatuses] = useState(false);
+
   const modalRef = useRef<HTMLDivElement | null>(null);
+
+  const updatedSubtask = (subtask: Subtask) => {
+    let subtaskToBeUpdated: Subtask = subtask;
+    if (subtaskToBeUpdated.isCompleted) {
+      subtaskToBeUpdated = { ...subtaskToBeUpdated!, isCompleted: false };
+    } else {
+      subtaskToBeUpdated = { ...subtaskToBeUpdated!, isCompleted: true };
+    }
+
+    const updatedParentTask: Task = {
+      ...viewedTask!,
+      subtasks: viewedTask!.subtasks.map((subtask) => {
+        if (subtask.title === subtaskToBeUpdated.title) {
+          return subtaskToBeUpdated;
+        } else return subtask;
+      }),
+    };
+
+    const updatedCurrentColumn = {
+      ...currentColumn!,
+      tasks: currentColumn!.tasks.map((task) => {
+        if (task.id === viewedTask?.id) {
+          return updatedParentTask;
+        } else return task;
+      }),
+    };
+
+    const updatedCurrentBoard: Board = {
+      ...currentBoard!,
+      columns: currentBoard.columns.map((column) => {
+        if (column.id === updatedCurrentColumn.id) {
+          return updatedCurrentColumn;
+        } else return column;
+      }),
+    };
+
+    const updatedAppData: AppDataType = {
+      boards: appData.boards.map((board) => {
+        if (board.id === updatedCurrentBoard.id) {
+          return updatedCurrentBoard;
+        } else return board;
+      }),
+    };
+
+    setAppData(updatedAppData);
+  };
 
   return (
     <div
@@ -36,19 +109,21 @@ const TaskModal = ({ showViewModal, setShowViewModal }: Props) => {
       >
         <div className="flex items-center justify-between">
           <h1 className="text-darkModeTitle text-xl font-semibold">
-            {selectedTask?.title}
+            {viewedTask?.title}
           </h1>
           <img src={moreIcon} alt="more_icon" />
         </div>
 
-        <p className="text-subtextColor py-2">{selectedTask?.description}</p>
+        <p className="text-subtextColor py-2">
+          {viewedTask?.description || "No description"}
+        </p>
 
         <p className="text-darkModeTitle py-2 font-medium">
           Subtasks({completedSubtasks} of {totalSubtasks})
         </p>
 
         <div>
-          {selectedTask?.subtasks.map((subtask) => {
+          {viewedTask?.subtasks.map((subtask) => {
             return (
               <div
                 key={uuid()}
@@ -58,6 +133,9 @@ const TaskModal = ({ showViewModal, setShowViewModal }: Props) => {
                   className={`min-w-[20px] min-h-[20px] rounded-md ${
                     subtask.isCompleted ? "bg-purple" : "bg-darkTiles"
                   } mr-4 flex items-center justify-center border border-subtextColor border-opacity-30`}
+                  onClick={() => {
+                    updatedSubtask(subtask);
+                  }}
                 >
                   {subtask.isCompleted && <img src={checkMark} alt="" />}
                 </div>
@@ -84,9 +162,7 @@ const TaskModal = ({ showViewModal, setShowViewModal }: Props) => {
                 setShowStatuses(!showStatuses);
               }}
             >
-              <p className="text-darkModeTitle text-sm">
-                {selectedTask?.status}
-              </p>
+              <p className="text-darkModeTitle text-sm">{viewedTask?.status}</p>
               <img src={downIcon} alt="" />
             </div>
             <div

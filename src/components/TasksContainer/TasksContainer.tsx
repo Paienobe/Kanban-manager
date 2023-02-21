@@ -3,6 +3,7 @@ import { useGlobalContext } from "../../context/globalContext";
 import TaskTile from "../TaskTiles/TaskTile";
 import { MdCircle } from "react-icons/md";
 import TaskModal from "../TaskModal/TaskModal";
+import { SelectedTask, Task } from "../../types/types";
 
 const TasksContainer = () => {
   const { currentBoard } = useGlobalContext()!;
@@ -16,6 +17,10 @@ const TasksContainer = () => {
   ];
 
   const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<SelectedTask>({
+    id: "",
+    status: "",
+  });
 
   return (
     <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
@@ -35,6 +40,7 @@ const TasksContainer = () => {
                   key={task.id}
                   task={task}
                   setShowViewModal={setShowViewModal}
+                  setSelectedTask={setSelectedTask}
                 />
               );
             })}
@@ -46,6 +52,7 @@ const TasksContainer = () => {
         <TaskModal
           showViewModal={showViewModal}
           setShowViewModal={setShowViewModal}
+          selectedTask={selectedTask}
         />
       )}
     </div>
