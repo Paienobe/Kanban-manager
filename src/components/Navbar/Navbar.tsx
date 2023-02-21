@@ -11,7 +11,7 @@ type Props = {
 };
 
 const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
-  const { appData, currentBoardIndex, currentBoard } = useGlobalContext()!;
+  const { currentBoard } = useGlobalContext()!;
   const currentBoardName = currentBoard.name;
 
   return (
@@ -21,7 +21,12 @@ const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
       </div>
 
       <div className="w-[70%] flex items-center">
-        <h1 className="text-left text-darkModeTitle font-bold text-xl mr-2">
+        <h1
+          className="text-left text-darkModeTitle font-bold text-xl mr-2"
+          onClick={() => {
+            setShowBoardsModal(true);
+          }}
+        >
           {currentBoardName}
         </h1>
         <img
