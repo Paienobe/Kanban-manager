@@ -8,6 +8,7 @@ import downIcon from "../../assets/icon-chevron-down.svg";
 import {
   AppDataType,
   Board,
+  Column,
   SelectedTask,
   Subtask,
   Task,
@@ -52,6 +53,7 @@ const TaskModal = ({
 
   const updatedSubtask = (subtask: Subtask) => {
     let subtaskToBeUpdated: Subtask = subtask;
+
     if (subtaskToBeUpdated.isCompleted) {
       subtaskToBeUpdated = { ...subtaskToBeUpdated!, isCompleted: false };
     } else {
@@ -88,6 +90,48 @@ const TaskModal = ({
     const updatedAppData: AppDataType = {
       boards: appData.boards.map((board) => {
         if (board.id === updatedCurrentBoard.id) {
+          return updatedCurrentBoard;
+        } else return board;
+      }),
+    };
+
+    setAppData(updatedAppData);
+  };
+
+  const updateTaskColumn = (status: string) => {
+    const updatedCurrentTask = { ...viewedTask!, status };
+
+    const statusIsInColumn = status === currentColumn?.name;
+
+    const updatedColumn: Column = {
+      ...currentColumn!,
+      tasks: statusIsInColumn
+        ? currentColumn.tasks.map((task) => {
+            if (task.id === viewedTask?.id) {
+              return updatedCurrentTask;
+            } else return task;
+          })
+        : currentColumn!.tasks.filter((task) => {
+            return task.id !== viewedTask?.id;
+          }),
+    };
+
+    const updatedCurrentBoard: Board = {
+      ...currentBoard,
+      columns: currentBoard.columns.map((column) => {
+        if (column.id === currentColumn?.id) {
+          return updatedColumn;
+        } else if (column.name === status) {
+          return { ...column, tasks: [...column.tasks, updatedCurrentTask] };
+        } else {
+          return column;
+        }
+      }),
+    };
+
+    const updatedAppData: AppDataType = {
+      boards: appData.boards.map((board) => {
+        if (board.id === currentBoard.id) {
           return updatedCurrentBoard;
         } else return board;
       }),
@@ -176,7 +220,14 @@ const TaskModal = ({
             >
               {availableStatuses.map((status) => {
                 return (
-                  <p key={uuid()} className={`text-subtextColor pb-2 text-sm`}>
+                  <p
+                    key={uuid()}
+                    className={`text-subtextColor pb-2 text-sm`}
+                    onClick={() => {
+                      updateTaskColumn(status);
+                      setShowStatuses(!showStatuses);
+                    }}
+                  >
                     {status}
                   </p>
                 );
