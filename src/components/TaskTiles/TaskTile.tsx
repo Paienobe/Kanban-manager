@@ -16,13 +16,15 @@ const TaskTile = ({ task, setShowViewModal, setSelectedTask }: Props) => {
 
   return (
     <div
-      className="bg-darkTiles mb-4 text-left p-4 rounded-lg cursor-pointer"
+      className="bg-lightTiles dark:bg-darkTiles  mb-4 text-left p-4 rounded-lg cursor-pointer transition-[background] duration-300 ease-in-out"
       onClick={() => {
         setSelectedTask({ id: task.id, status: task.status });
         setShowViewModal(true);
       }}
     >
-      <p className="text-darkModeTitle font-semibold">{task.title}</p>
+      <p className=" text-lightModeTitle dark:text-darkModeTitle font-semibold">
+        {task.title}
+      </p>
       <p className="text-subtextColor text-sm">
         {completedSubtasks} of {totalSubtasks} subtask{totalSubtasks > 1 && "s"}
       </p>

@@ -13,10 +13,14 @@ type Props = {
 };
 
 const AllBoardsModal = ({ showBoardsModal, setShowBoardsModal }: Props) => {
-  const { appData, currentBoardIndex, setCurrentBoardIndex } =
+  const { appData, currentBoardIndex, setCurrentBoardIndex, theme, setTheme } =
     useGlobalContext()!;
   const totalBoards = appData.boards.length;
   const modalRef = useRef<HTMLDivElement | null>(null);
+
+  const toggleTheme = () => {
+    theme === "dark" ? setTheme("light") : setTheme("dark");
+  };
 
   return (
     <div
@@ -26,7 +30,7 @@ const AllBoardsModal = ({ showBoardsModal, setShowBoardsModal }: Props) => {
       }
     >
       <div
-        className="bg-darkTiles py-4 rounded-xl w-[90%] text-left"
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl w-[90%] text-left"
         ref={modalRef}
       >
         <p className="text-subtextColor font-semibold text-lg pl-4 mb-2">
@@ -69,10 +73,19 @@ const AllBoardsModal = ({ showBoardsModal, setShowBoardsModal }: Props) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between mx-4 my-2 bg-darkBg py-4 rounded-xl px-14">
+        <div
+          className="flex items-center justify-between mx-4 my-2 bg-lightBg dark:bg-darkBg py-4 rounded-xl px-14"
+          onClick={toggleTheme}
+        >
           <MoonIcon />
           <div className="bg-purple w-16 p-1 rounded-full">
-            <MdCircle size={20} color="white" />
+            <MdCircle
+              size={20}
+              color="white"
+              className={`${
+                theme === "dark" ? "mr-[50%]" : "ml-[65%]"
+              } transition-all duration-300 ease-in-out`}
+            />
           </div>
           <SunIcon />
         </div>

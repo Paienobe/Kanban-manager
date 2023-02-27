@@ -8,6 +8,8 @@ type ContextType = {
   currentBoardIndex: number;
   setCurrentBoardIndex: React.Dispatch<React.SetStateAction<number>>;
   currentBoard: Board;
+  theme: string;
+  setTheme: React.Dispatch<React.SetStateAction<"dark" | "light">>;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -18,6 +20,13 @@ const AppProvider = ({ children }: ProviderProps) => {
   const [appData, setAppData] = useState<AppDataType>(data);
   const [currentBoardIndex, setCurrentBoardIndex] = useState(0);
   const currentBoard = appData.boards[currentBoardIndex];
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  useEffect(() => {
+    const documentElement = document.documentElement;
+    documentElement.classList.remove(theme === "dark" ? "light" : "dark");
+    documentElement.classList.add(theme);
+  }, [theme]);
 
   return (
     <AppContext.Provider
@@ -27,6 +36,8 @@ const AppProvider = ({ children }: ProviderProps) => {
         currentBoardIndex,
         setCurrentBoardIndex,
         currentBoard,
+        theme,
+        setTheme,
       }}
     >
       {children}

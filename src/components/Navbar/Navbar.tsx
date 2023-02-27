@@ -15,14 +15,14 @@ const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
   const currentBoardName = currentBoard.name;
 
   return (
-    <div className="p-4 py-6 bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30">
+    <div className="p-4 py-6 bg-lightTiles dark:bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30 transition-[background] duration-300 ease-in-out">
       <div className="w-[10%]">
         <img src={mobileLogo} alt="" />
       </div>
 
       <div className="w-[70%] flex items-center">
         <h1
-          className="text-left text-darkModeTitle font-bold text-xl mr-2"
+          className="text-left text-lightModeTitle dark:text-darkModeTitle font-bold text-xl mr-2"
           onClick={() => {
             setShowBoardsModal(true);
           }}

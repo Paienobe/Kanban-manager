@@ -7,7 +7,7 @@ import TasksContainer from "./components/TasksContainer/TasksContainer";
 function App() {
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   return (
-    <div className="App bg-darkBg min-h-screen">
+    <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
       <Navbar
         showBoardsModal={showBoardsModal}
         setShowBoardsModal={setShowBoardsModal}
