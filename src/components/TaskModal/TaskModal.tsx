@@ -148,11 +148,11 @@ const TaskModal = ({
       }}
     >
       <div
-        className="bg-darkTiles p-4 rounded-xl w-[90%] text-left max-h-[85vh] overflow-y-auto"
+        className="bg-lightTiles dark:bg-darkTiles p-4 rounded-xl w-[90%] text-left max-h-[85vh] overflow-y-auto"
         ref={modalRef}
       >
         <div className="flex items-center justify-between">
-          <h1 className="text-darkModeTitle text-xl font-semibold">
+          <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold">
             {viewedTask?.title}
           </h1>
           <img src={moreIcon} alt="more_icon" />
@@ -162,7 +162,7 @@ const TaskModal = ({
           {viewedTask?.description || "No description"}
         </p>
 
-        <p className="text-darkModeTitle py-2 font-medium">
+        <p className="text-lightModeTitle dark:text-darkModeTitle py-2 font-medium">
           Subtasks({completedSubtasks} of {totalSubtasks})
         </p>
 
@@ -171,11 +171,13 @@ const TaskModal = ({
             return (
               <div
                 key={uuid()}
-                className="flex items-center my-2 bg-darkBg p-3 rounded-md"
+                className="flex items-center my-2 bg-lightBg dark:bg-darkBg p-3 rounded-md"
               >
                 <div
                   className={`min-w-[20px] min-h-[20px] rounded-md ${
-                    subtask.isCompleted ? "bg-purple" : "bg-darkTiles"
+                    subtask.isCompleted
+                      ? "bg-purple"
+                      : "bg-lightTiles dark:bg-darkTiles"
                   } mr-4 flex items-center justify-center border border-subtextColor border-opacity-30`}
                   onClick={() => {
                     updatedSubtask(subtask);
@@ -187,7 +189,7 @@ const TaskModal = ({
                   className={`${
                     subtask.isCompleted
                       ? "text-subtextColor line-through"
-                      : "text-white"
+                      : "text-black dark:text-white"
                   } font-medium text-sm`}
                 >
                   {subtask.title}
@@ -198,7 +200,9 @@ const TaskModal = ({
         </div>
 
         <div>
-          <p className="text-darkModeTitle font-medium mt-4">Current Status</p>
+          <p className="text-lightModeTitle dark:text-darkModeTitle font-medium mt-4">
+            Current Status
+          </p>
           <div>
             <div
               className="border border-purple px-2 py-3 rounded-md my-2 flex items-center justify-between"
@@ -206,11 +210,13 @@ const TaskModal = ({
                 setShowStatuses(!showStatuses);
               }}
             >
-              <p className="text-darkModeTitle text-sm">{viewedTask?.status}</p>
+              <p className="text-lightModeTitle dark:text-darkModeTitle text-sm">
+                {viewedTask?.status}
+              </p>
               <img src={downIcon} alt="" />
             </div>
             <div
-              className={`bg-darkBg px-2 ${
+              className={`bg-lightBg dark:bg-darkBg px-2 ${
                 showStatuses ? "py-3" : "py-0"
               } rounded-md overflow-hidden ${
                 showStatuses
