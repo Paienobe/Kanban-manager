@@ -55,7 +55,10 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal }: Props) => {
           >
             Delete
           </button>
-          <button className="w-full p-2 bg-white text-purple rounded-full font-medium">
+          <button
+            className="w-full p-2 bg-lightBg dark:bg-white text-purple rounded-full font-medium"
+            onClick={() => setShowDeleteModal(false)}
+          >
             Cancel
           </button>
         </div>

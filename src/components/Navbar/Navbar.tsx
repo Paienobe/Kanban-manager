@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import mobileLogo from "../../assets/logo-mobile.svg";
 import addIcon from "../../assets/icon-add-task-mobile.svg";
 import moreIcon from "../../assets/icon-vertical-ellipsis.svg";
 import downIcon from "../../assets/icon-chevron-down.svg";
+import { detectOutsideClick } from "../../utils/utils";
 
 type Props = {
   showBoardsModal: boolean;
@@ -20,6 +21,18 @@ const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
   } = useGlobalContext()!;
   const currentBoardName = currentBoard?.name || "No Board Found";
   const [showOptions, setShowOptions] = useState(false);
+  const optionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", (e) =>
+      detectOutsideClick(e, optionsRef, showOptions, setShowOptions)
+    );
+    return () => {
+      document.removeEventListener("mousedown", (e) =>
+        detectOutsideClick(e, optionsRef, showOptions, setShowOptions)
+      );
+    };
+  }, [showOptions]);
 
   return (
     <div className="p-4 py-6 bg-lightTiles dark:bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30 transition-[background] duration-300 ease-in-out">
@@ -54,7 +67,10 @@ const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
         </div>
         <img src={moreIcon} alt="" onClick={() => setShowOptions(true)} />
         {showOptions && (
-          <div className="absolute bg-lightBg dark:bg-darkBg top-[4rem] right-4 p-4 rounded-lg text-left w-[50%]">
+          <div
+            className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[4rem] right-4 p-4 rounded-lg text-left w-[50%]"
+            ref={optionsRef}
+          >
             <p className="text-subtextColor font-medium pb-2">Edit Board</p>
             <p
               className="text-red font-medium"
