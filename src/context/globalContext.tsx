@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import data from "../data/data.json";
-import { AppDataType, Board, Task } from "../types/types";
+import { AppDataType, Board, DeleteType, Task } from "../types/types";
 
 type ContextType = {
   appData: AppDataType;
@@ -10,6 +10,10 @@ type ContextType = {
   currentBoard: Board;
   theme: string;
   setTheme: React.Dispatch<React.SetStateAction<"dark" | "light">>;
+  deleteItem: DeleteType;
+  setDeleteItem: React.Dispatch<React.SetStateAction<DeleteType>>;
+  showDeleteModal: boolean;
+  setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -21,6 +25,12 @@ const AppProvider = ({ children }: ProviderProps) => {
   const [currentBoardIndex, setCurrentBoardIndex] = useState(0);
   const currentBoard = appData.boards[currentBoardIndex];
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteItem, setDeleteItem] = useState<DeleteType>({
+    status: false,
+    type: "",
+    id: "",
+  });
 
   useEffect(() => {
     const documentElement = document.documentElement;
@@ -38,6 +48,10 @@ const AppProvider = ({ children }: ProviderProps) => {
         currentBoard,
         theme,
         setTheme,
+        deleteItem,
+        setDeleteItem,
+        showDeleteModal,
+        setShowDeleteModal,
       }}
     >
       {children}
