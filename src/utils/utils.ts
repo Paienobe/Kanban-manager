@@ -14,7 +14,7 @@ export const getCompletedSubtasks = (subtasks: Subtask[]) => {
 };
 
 export const detectOutsideClick = (
-  e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  e: React.MouseEvent<HTMLDivElement, MouseEvent> | MouseEvent,
   elementRef: React.MutableRefObject<HTMLDivElement | null>,
   visibilityState: boolean,
   setVisibilityState: React.Dispatch<React.SetStateAction<boolean>>
