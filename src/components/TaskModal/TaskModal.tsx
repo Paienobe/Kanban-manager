@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import moreIcon from "../../assets/icon-vertical-ellipsis.svg";
 import { detectOutsideClick, getCompletedSubtasks } from "../../utils/utils";
@@ -25,7 +25,17 @@ const TaskModal = ({
   setShowViewModal,
   selectedTask,
 }: Props) => {
-  const { currentBoard, setAppData, appData } = useGlobalContext()!;
+  const {
+    currentBoard,
+    setAppData,
+    appData,
+    setShowDeleteModal,
+    setDeleteItem,
+  } = useGlobalContext()!;
+
+  const optionsRef = useRef<HTMLDivElement>(null);
+
+  const [showOptions, setShowOptions] = useState(false);
 
   const currentColumn = currentBoard.columns.find((column) => {
     return column.tasks.find((task) => {
@@ -38,10 +48,10 @@ const TaskModal = ({
   });
 
   const completedSubtasks = getCompletedSubtasks(
-    viewedTask!.subtasks
+    viewedTask?.subtasks!
   ).completed;
 
-  const totalSubtasks = getCompletedSubtasks(viewedTask!.subtasks).total;
+  const totalSubtasks = getCompletedSubtasks(viewedTask?.subtasks!).total;
 
   const availableStatuses = currentBoard.columns.map((column) => {
     return column.name;
@@ -140,6 +150,17 @@ const TaskModal = ({
     setAppData(updatedAppData);
   };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", (e) =>
+      detectOutsideClick(e, optionsRef, showOptions, setShowOptions)
+    );
+    return () => {
+      document.removeEventListener("mousedown", (e) =>
+        detectOutsideClick(e, optionsRef, showOptions, setShowOptions)
+      );
+    };
+  }, [showOptions]);
+
   return (
     <div
       className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -155,7 +176,40 @@ const TaskModal = ({
           <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold">
             {viewedTask?.title}
           </h1>
-          <img src={moreIcon} alt="more_icon" />
+          <img
+            src={moreIcon}
+            alt="more_icon"
+            onClick={() => setShowOptions(!showOptions)}
+          />
+
+          {showOptions && (
+            <div
+              className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[12rem] right-8 p-4 rounded-lg text-left w-[50%]"
+              ref={optionsRef}
+            >
+              <p
+                className="text-subtextColor font-medium pb-2"
+                onClick={() => setShowViewModal(false)}
+              >
+                Edit Board
+              </p>
+              <p
+                className="text-red font-medium"
+                onClick={() => {
+                  setShowViewModal(false);
+                  setShowDeleteModal(true);
+                  setDeleteItem({
+                    status: true,
+                    id: viewedTask?.id!,
+                    type: "task",
+                  });
+                  setShowOptions(false);
+                }}
+              >
+                Delete Board
+              </p>
+            </div>
+          )}
         </div>
 
         <p className="text-subtextColor py-2">
