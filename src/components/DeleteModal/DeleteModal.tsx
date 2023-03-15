@@ -21,10 +21,47 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal }: Props) => {
     setAppData(updatedAppData);
   };
 
+  const currentColumn = currentBoard.columns.find((column) => {
+    return column.tasks.find((task) => {
+      return task.id === deleteItem.id;
+    });
+  });
+
+  const taskToBeDeleted = currentColumn?.tasks.find((task) => {
+    return task.id === deleteItem.id;
+  });
+
   const getTitleOrName = () => {
     if (deleteItem.type === "board") {
       return currentBoard.name;
-    }
+    } else return taskToBeDeleted?.title;
+  };
+
+  const deleteTask = () => {
+    const updatedTasks = currentColumn?.tasks.filter((task) => {
+      return task.id !== taskToBeDeleted?.id;
+    });
+
+    const updatedColumn = { ...currentColumn!, tasks: updatedTasks! };
+
+    const updatedBoard = {
+      ...currentBoard,
+      columns: currentBoard.columns.map((column) => {
+        if (column.id === updatedColumn.id) {
+          return updatedColumn;
+        } else return column;
+      }),
+    };
+
+    const updatedAppData = {
+      boards: appData.boards.map((board) => {
+        if (board.id === currentBoard.id) {
+          return updatedBoard;
+        } else return board;
+      }),
+    };
+
+    setAppData(updatedAppData);
   };
 
   return (
@@ -42,15 +79,19 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal }: Props) => {
           Delete this {deleteItem.type}?
         </h1>
         <p className="text-subtextColor">
-          Are you sure you want to delete the ‘{getTitleOrName()}’ board? This
-          action cannot be reversed.
+          Are you sure you want to delete the ‘{getTitleOrName()}’{" "}
+          {deleteItem.type === "board" ? "board" : "task and its subtasks"}?
+          This action cannot be reversed.
         </p>
         <div className="mt-4">
           <button
             className="w-full p-2 bg-red text-white rounded-full mb-2 font-medium"
             onClick={() => {
-              deleteCurrentBoard();
               setShowDeleteModal(false);
+
+              if (deleteItem.type === "board") {
+                deleteCurrentBoard();
+              } else deleteTask();
             }}
           >
             Delete
