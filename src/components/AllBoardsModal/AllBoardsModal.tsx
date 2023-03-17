@@ -10,9 +10,14 @@ import { MdCircle } from "react-icons/md";
 type Props = {
   showBoardsModal: boolean;
   setShowBoardsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowBoardForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const AllBoardsModal = ({ showBoardsModal, setShowBoardsModal }: Props) => {
+const AllBoardsModal = ({
+  showBoardsModal,
+  setShowBoardsModal,
+  setShowBoardForm,
+}: Props) => {
   const { appData, currentBoardIndex, setCurrentBoardIndex, theme, setTheme } =
     useGlobalContext()!;
   const totalBoards = appData.boards.length;
@@ -67,7 +72,10 @@ const AllBoardsModal = ({ showBoardsModal, setShowBoardsModal }: Props) => {
             );
           })}
 
-          <div className="flex items-center ml-4 my-2">
+          <div
+            className="flex items-center ml-4 my-2"
+            onClick={() => setShowBoardForm(true)}
+          >
             <BoardIcon className="mr-4  my-3" fill="#635fc7" />
             <p className="text-purple">+Create New Board</p>
           </div>

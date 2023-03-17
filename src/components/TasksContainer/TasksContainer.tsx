@@ -4,17 +4,10 @@ import TaskTile from "../TaskTiles/TaskTile";
 import { MdCircle } from "react-icons/md";
 import TaskModal from "../TaskModal/TaskModal";
 import { SelectedTask, Task } from "../../types/types";
+import { columnHexCodes } from "../../constants/constants";
 
 const TasksContainer = () => {
   const { currentBoard } = useGlobalContext()!;
-  const columnHexCodes = [
-    "#49C4E5",
-    "#635fc7",
-    "#67E2AE",
-    "#e5a449",
-    "#2a3fdb",
-    "#c36e6e",
-  ];
 
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<SelectedTask>({
