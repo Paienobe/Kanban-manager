@@ -17,6 +17,10 @@ const TasksContainer = () => {
 
   const boardsAreAvailable = currentBoard?.columns.length > 0;
 
+  const checkForDuplicateColumns = () => {
+    // columnInputs.
+  };
+
   return (
     <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
       {boardsAreAvailable ? (
@@ -31,7 +35,13 @@ const TasksContainer = () => {
                   </p>
                 </div>
 
-                <div className="mt-5">
+                <div
+                  className={`mt-5  ${
+                    column.tasks.length < 1
+                      ? "border-2 border-opacity-30 border-dashed border-subtextColor min-h-[75vh]"
+                      : ""
+                  } rounded-lg`}
+                >
                   {column.tasks.map((task) => {
                     return (
                       <TaskTile

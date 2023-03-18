@@ -71,6 +71,23 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     }
   };
 
+  const checkForDuplicates = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const currentField = formRef.current?.[`input_${id}`] as Element;
+
+    const duplicatesExist = columnInputs.some((obj) => {
+      return obj.id !== id && obj.value === e.target.value;
+    });
+
+    if (duplicatesExist) {
+      currentField.classList.add("border-red");
+    } else {
+      currentField.classList.remove("border-red");
+    }
+  };
+
   return (
     <div
       className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -138,6 +155,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                       required
                       value={input.value}
                       onChange={(e) => {
+                        checkForDuplicates(e, input.id);
                         updateInputValue(e, input);
                       }}
                     />
