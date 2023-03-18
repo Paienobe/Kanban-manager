@@ -37,7 +37,12 @@ function App() {
         />
       )}
 
-      <BoardForm />
+      {showBoardForm && (
+        <BoardForm
+          showBoardForm={showBoardForm}
+          setShowBoardForm={setShowBoardForm}
+        />
+      )}
     </div>
   );
 }

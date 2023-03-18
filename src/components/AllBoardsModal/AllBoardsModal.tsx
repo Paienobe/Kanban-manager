@@ -74,7 +74,10 @@ const AllBoardsModal = ({
 
           <div
             className="flex items-center ml-4 my-2"
-            onClick={() => setShowBoardForm(true)}
+            onClick={() => {
+              setShowBoardsModal(false);
+              setShowBoardForm(true);
+            }}
           >
             <BoardIcon className="mr-4  my-3" fill="#635fc7" />
             <p className="text-purple">+Create New Board</p>
