@@ -29,12 +29,17 @@ export type AppDataType = {
 };
 
 export type SelectedTask = {
-  id : string | number
-  status:string
-}
+  id: string | number;
+  status: string;
+};
 
 export type DeleteType = {
   status: boolean;
   type: string;
   id: string | number;
-}
+};
+
+export type ColumnInput = {
+  id: string;
+  value: string;
+};

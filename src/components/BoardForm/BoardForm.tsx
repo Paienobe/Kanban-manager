@@ -1,7 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import uuid from "react-uuid";
 import { IoClose } from "react-icons/io5";
 import { detectOutsideClick } from "../../utils/utils";
+import { Board, ColumnInput } from "../../types/types";
+import { useGlobalContext } from "../../context/globalContext";
 
 type Props = {
   showBoardForm: boolean;
@@ -9,11 +11,19 @@ type Props = {
 };
 
 const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
-  const [columnInputs, setColumnInputs] = useState([{ id: uuid(), value: "" }]);
+  const { appData, setAppData, setCurrentBoardIndex } = useGlobalContext()!;
+
+  const [columnInputs, setColumnInputs] = useState<ColumnInput[]>([
+    { id: uuid(), value: "" },
+    { id: uuid(), value: "" },
+  ]);
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const updateInputValue = (
     e: React.ChangeEvent<HTMLInputElement>,
-    input: { id: string; value: string }
+    input: ColumnInput
   ) => {
     const selectedInput = { ...input, value: e.target.value };
     const updatedInputs = columnInputs.map((item) => {
@@ -21,17 +31,13 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
         return selectedInput;
       } else return item;
     });
-
     setColumnInputs(updatedInputs);
   };
-
-  const modalRef = useRef<HTMLDivElement>(null);
 
   const addNewInput = () => {
     if (columnInputs.length < 6) {
       setColumnInputs([...columnInputs, { id: uuid(), value: "" }]);
     }
-    console.log(columnInputs);
   };
 
   const deleteInput = (id: string) => {
@@ -41,6 +47,28 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     if (columnInputs.length > 1) {
       setColumnInputs(updatedInputs);
     } else setColumnInputs([{ id: uuid(), value: "" }]);
+  };
+
+  const createBoard = () => {
+    if (formRef.current) {
+      const boardName = formRef.current.board_name.value;
+      const boardColumns = columnInputs.map((obj) => {
+        return {
+          id: uuid(),
+          name: formRef.current?.[`input_${obj.id}`].value,
+          tasks: [],
+        };
+      });
+      const newBoard: Board = {
+        id: uuid(),
+        name: boardName,
+        columns: boardColumns,
+      };
+      const updatedAppData = { boards: [...appData.boards, newBoard] };
+      setAppData(updatedAppData);
+      setCurrentBoardIndex(appData.boards.length);
+      setShowBoardForm(false);
+    }
   };
 
   return (
@@ -57,7 +85,13 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
           Add New Board
         </h1>
-        <form>
+        <form
+          ref={formRef}
+          onSubmit={(e) => {
+            e.preventDefault();
+            createBoard();
+          }}
+        >
           <div className="">
             <label
               htmlFor="board name"
@@ -69,7 +103,8 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               type="text"
               name="board_name"
               placeholder="e.g. Web Designer"
-              className="p-2 rounded bg-transparent border border-subtextColor w-full text-lightModeTitle dark:text-darkModeTitle"
+              required
+              className="p-2 rounded bg-transparent border border-subtextColor w-full text-lightModeTitle dark:text-darkModeTitle outline-none"
             />
           </div>
 
@@ -92,15 +127,16 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                     : "Your column title...";
                 return (
                   <div
-                    key={uuid()}
+                    key={input.id}
                     className="flex items-center justify-between mb-2"
                   >
                     <input
                       type="text"
                       name={`input_${input.id}`}
-                      className="p-2 rounded bg-transparent border border-subtextColor w-[90%] box-border text-lightModeTitle dark:text-darkModeTitle"
+                      className="p-2 rounded bg-transparent border border-subtextColor w-[90%] box-border text-lightModeTitle dark:text-darkModeTitle outline-none"
                       placeholder={placeholderText}
-                      defaultValue={input.value}
+                      required
+                      value={input.value}
                       onChange={(e) => {
                         updateInputValue(e, input);
                       }}
