@@ -79,7 +79,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     id: string
   ) => {
     const duplicatesExist = columnInputs.some((obj) => {
-      return obj.id !== id && obj.value === e.target.value;
+      return obj.id !== id && obj.value === e.target.value.trim();
     });
 
     if (duplicatesExist) {
@@ -94,7 +94,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
 
   const checkForDuplicateBoardName = (name: string) => {
     const duplicateIsPresent = appData.boards.some((board) => {
-      return board.name.toLowerCase() === name.toLowerCase();
+      return board.name.trim().toLowerCase() === name.toLowerCase();
     });
     setBoardNameIsUsed(duplicateIsPresent);
   };
