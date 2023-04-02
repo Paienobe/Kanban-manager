@@ -13,6 +13,7 @@ type Props = {
 const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
   const { appData, setAppData, setCurrentBoardIndex } = useGlobalContext()!;
   const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
+  const [boardNameIsUsed, setBoardNameIsUsed] = useState(false);
   const [columnInputs, setColumnInputs] = useState<ColumnInput[]>([
     { id: uuid(), value: "" },
     { id: uuid(), value: "" },
@@ -50,24 +51,26 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
   };
 
   const createBoard = () => {
-    if (formRef.current) {
-      const boardName = formRef.current.board_name.value;
-      const boardColumns = columnInputs.map((obj) => {
-        return {
+    if (!boardNameIsUsed && inputsWithDuplicates.length < 1) {
+      if (formRef.current) {
+        const boardName = formRef.current.board_name.value;
+        const boardColumns = columnInputs.map((obj) => {
+          return {
+            id: uuid(),
+            name: formRef.current?.[`input_${obj.id}`].value,
+            tasks: [],
+          };
+        });
+        const newBoard: Board = {
           id: uuid(),
-          name: formRef.current?.[`input_${obj.id}`].value,
-          tasks: [],
+          name: boardName,
+          columns: boardColumns,
         };
-      });
-      const newBoard: Board = {
-        id: uuid(),
-        name: boardName,
-        columns: boardColumns,
-      };
-      const updatedAppData = { boards: [...appData.boards, newBoard] };
-      setAppData(updatedAppData);
-      setCurrentBoardIndex(appData.boards.length);
-      setShowBoardForm(false);
+        const updatedAppData = { boards: [...appData.boards, newBoard] };
+        setAppData(updatedAppData);
+        setCurrentBoardIndex(appData.boards.length);
+        setShowBoardForm(false);
+      }
     }
   };
 
@@ -75,8 +78,6 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     e: React.ChangeEvent<HTMLInputElement>,
     id: string
   ) => {
-    const currentField = formRef.current?.[`input_${id}`] as Element;
-
     const duplicatesExist = columnInputs.some((obj) => {
       return obj.id !== id && obj.value === e.target.value;
     });
@@ -89,6 +90,13 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
       });
       setInputWithDuplicates(updatedIds);
     }
+  };
+
+  const checkForDuplicateBoardName = (name: string) => {
+    const duplicateIsPresent = appData.boards.some((board) => {
+      return board.name.toLowerCase() === name.toLowerCase();
+    });
+    setBoardNameIsUsed(duplicateIsPresent);
   };
 
   return (
@@ -112,7 +120,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
             createBoard();
           }}
         >
-          <div className="">
+          <div className="relative">
             <label
               htmlFor="board name"
               className="block text-lightModeTitle dark:text-darkModeTitle font-semibold mb-2"
@@ -124,8 +132,18 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               name="board_name"
               placeholder="e.g. Web Designer"
               required
-              className="p-2 rounded bg-transparent border border-subtextColor w-full text-lightModeTitle dark:text-darkModeTitle outline-none"
+              className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
+                boardNameIsUsed ? "border-red" : "border-subtextColor"
+              }`}
+              onChange={(e) => {
+                checkForDuplicateBoardName(e.target.value);
+              }}
             />
+            {boardNameIsUsed && (
+              <p className="absolute top-[55%] right-[2.5%] font-semibold text-red">
+                Used
+              </p>
+            )}
           </div>
 
           <div>
