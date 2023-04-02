@@ -94,7 +94,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
 
   const checkForDuplicateBoardName = (name: string) => {
     const duplicateIsPresent = appData.boards.some((board) => {
-      return board.name.trim().toLowerCase() === name.toLowerCase();
+      return board.name.toLowerCase() === name.trim().toLowerCase();
     });
     setBoardNameIsUsed(duplicateIsPresent);
   };
