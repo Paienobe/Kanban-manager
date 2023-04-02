@@ -12,7 +12,7 @@ type Props = {
 
 const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
   const { appData, setAppData, setCurrentBoardIndex } = useGlobalContext()!;
-
+  const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
   const [columnInputs, setColumnInputs] = useState<ColumnInput[]>([
     { id: uuid(), value: "" },
     { id: uuid(), value: "" },
@@ -82,9 +82,12 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     });
 
     if (duplicatesExist) {
-      currentField.classList.add("border-red");
+      setInputWithDuplicates([...inputsWithDuplicates, id]);
     } else {
-      currentField.classList.remove("border-red");
+      const updatedIds = inputsWithDuplicates.filter((item) => {
+        return item !== id;
+      });
+      setInputWithDuplicates(updatedIds);
     }
   };
 
@@ -142,6 +145,10 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                     : index === 2
                     ? "e.g. Done"
                     : "Your column title...";
+
+                const hasADuplicateValue = inputsWithDuplicates.some((item) => {
+                  return item === input.id;
+                });
                 return (
                   <div
                     key={input.id}
@@ -150,7 +157,11 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                     <input
                       type="text"
                       name={`input_${input.id}`}
-                      className="p-2 rounded bg-transparent border border-subtextColor w-[90%] box-border text-lightModeTitle dark:text-darkModeTitle outline-none"
+                      className={`p-2 rounded bg-transparent border  w-[90%] box-border text-lightModeTitle dark:text-darkModeTitle outline-none relative ${
+                        hasADuplicateValue
+                          ? "border-red"
+                          : "border-subtextColor"
+                      }`}
                       placeholder={placeholderText}
                       required
                       value={input.value}
@@ -164,6 +175,11 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                       size={30}
                       className="text-subtextColor hover:text-red transition-colors duration-200 ease-in-out"
                     />
+                    {hasADuplicateValue && (
+                      <p className="absolute right-[20%] font-semibold text-red">
+                        Used
+                      </p>
+                    )}
                   </div>
                 );
               })}
