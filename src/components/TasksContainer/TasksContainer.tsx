@@ -14,12 +14,9 @@ const TasksContainer = () => {
     id: "",
     status: "",
   });
+  const [overColumnAdder, setOverColumnAdder] = useState(false);
 
   const boardsAreAvailable = currentBoard?.columns.length > 0;
-
-  const checkForDuplicateColumns = () => {
-    // columnInputs.
-  };
 
   return (
     <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
@@ -56,6 +53,24 @@ const TasksContainer = () => {
               </div>
             );
           })}
+
+          {currentBoard?.columns.length < 6 ? (
+            <div
+              className="min-w-[90%] mt-[125px] flex items-center justify-center min-h-[75vh] bg-gradient-to-b from-darkTiles to-transparent rounded-lg cursor-pointer"
+              onMouseEnter={() => setOverColumnAdder(!overColumnAdder)}
+              onMouseLeave={() => setOverColumnAdder(!overColumnAdder)}
+            >
+              <h1
+                className={` font-semibold transition-all duration-300 ease-in-out ${
+                  overColumnAdder ? "text-purple" : "text-subtextColor"
+                }`}
+              >
+                +New Column
+              </h1>
+            </div>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
         <div className="h-screen flex flex-col items-center justify-center">
