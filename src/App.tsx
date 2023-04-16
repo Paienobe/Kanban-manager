@@ -6,18 +6,21 @@ import DeleteModal from "./components/DeleteModal/DeleteModal";
 import Navbar from "./components/Navbar/Navbar";
 import TasksContainer from "./components/TasksContainer/TasksContainer";
 import { useGlobalContext } from "./context/globalContext";
+import TaskForm from "./components/TaskForm/TaskForm";
 
 function App() {
   const { deleteItem, showDeleteModal, setShowDeleteModal } =
     useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
+  const [showTaskForm, setShowTaskForm] = useState(false);
 
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
       <Navbar
         showBoardsModal={showBoardsModal}
         setShowBoardsModal={setShowBoardsModal}
+        setShowTaskForm={setShowTaskForm}
       />
 
       <TasksContainer />
@@ -41,6 +44,13 @@ function App() {
         <BoardForm
           showBoardForm={showBoardForm}
           setShowBoardForm={setShowBoardForm}
+        />
+      )}
+
+      {showTaskForm && (
+        <TaskForm
+          showTaskForm={showTaskForm}
+          setShowTaskForm={setShowTaskForm}
         />
       )}
     </div>
