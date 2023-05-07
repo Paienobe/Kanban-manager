@@ -39,7 +39,7 @@ export type DeleteType = {
   id: string | number;
 };
 
-export type ColumnInput = {
+export type DynamicInput = {
   id: string;
   value: string;
 };

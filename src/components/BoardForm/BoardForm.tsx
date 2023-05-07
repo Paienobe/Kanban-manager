@@ -1,8 +1,14 @@
 import React, { useCallback, useRef, useState } from "react";
 import uuid from "react-uuid";
 import { IoClose } from "react-icons/io5";
-import { detectOutsideClick } from "../../utils/utils";
-import { Board, ColumnInput } from "../../types/types";
+import {
+  addDynamicInput,
+  checkInputsForDuplicates,
+  deleteDynamicInputs,
+  detectOutsideClick,
+  updateInputText,
+} from "../../utils/utils";
+import { Board, DynamicInput } from "../../types/types";
 import { useGlobalContext } from "../../context/globalContext";
 
 type Props = {
@@ -14,41 +20,13 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
   const { appData, setAppData, setCurrentBoardIndex } = useGlobalContext()!;
   const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
   const [boardNameIsUsed, setBoardNameIsUsed] = useState(false);
-  const [columnInputs, setColumnInputs] = useState<ColumnInput[]>([
+  const [columnInputs, setColumnInputs] = useState<DynamicInput[]>([
     { id: uuid(), value: "" },
     { id: uuid(), value: "" },
   ]);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
-
-  const updateInputValue = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    input: ColumnInput
-  ) => {
-    const selectedInput = { ...input, value: e.target.value };
-    const updatedInputs = columnInputs.map((item) => {
-      if (item.id === input.id) {
-        return selectedInput;
-      } else return item;
-    });
-    setColumnInputs(updatedInputs);
-  };
-
-  const addNewInput = () => {
-    if (columnInputs.length < 6) {
-      setColumnInputs([...columnInputs, { id: uuid(), value: "" }]);
-    }
-  };
-
-  const deleteInput = (id: string) => {
-    const updatedInputs = columnInputs.filter((input) => {
-      return input.id !== id;
-    });
-    if (columnInputs.length > 1) {
-      setColumnInputs(updatedInputs);
-    } else setColumnInputs([{ id: uuid(), value: "" }]);
-  };
 
   const createBoard = () => {
     if (!boardNameIsUsed && inputsWithDuplicates.length < 1) {
@@ -71,24 +49,6 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
         setCurrentBoardIndex(appData.boards.length);
         setShowBoardForm(false);
       }
-    }
-  };
-
-  const checkForDuplicates = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    id: string
-  ) => {
-    const duplicatesExist = columnInputs.some((obj) => {
-      return obj.id !== id && obj.value === e.target.value.trim();
-    });
-
-    if (duplicatesExist) {
-      setInputWithDuplicates([...inputsWithDuplicates, id]);
-    } else {
-      const updatedIds = inputsWithDuplicates.filter((item) => {
-        return item !== id;
-      });
-      setInputWithDuplicates(updatedIds);
     }
   };
 
@@ -167,6 +127,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                 const hasADuplicateValue = inputsWithDuplicates.some((item) => {
                   return item === input.id;
                 });
+
                 return (
                   <div
                     key={input.id}
@@ -184,12 +145,29 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                       required
                       value={input.value}
                       onChange={(e) => {
-                        checkForDuplicates(e, input.id);
-                        updateInputValue(e, input);
+                        checkInputsForDuplicates(
+                          e,
+                          input.id,
+                          columnInputs,
+                          inputsWithDuplicates,
+                          setInputWithDuplicates
+                        );
+                        updateInputText(
+                          e,
+                          input,
+                          columnInputs,
+                          setColumnInputs
+                        );
                       }}
                     />
                     <IoClose
-                      onClick={() => deleteInput(input.id)}
+                      onClick={() =>
+                        deleteDynamicInputs(
+                          input.id,
+                          columnInputs,
+                          setColumnInputs
+                        )
+                      }
                       size={30}
                       className="text-subtextColor hover:text-red transition-colors duration-200 ease-in-out"
                     />
@@ -208,7 +186,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
             <button
               type="button"
               className="block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold"
-              onClick={addNewInput}
+              onClick={() => addDynamicInput(columnInputs, setColumnInputs)}
             >
               +Add New Column
             </button>

@@ -1,5 +1,11 @@
 import React, { useRef, useState } from "react";
-import { detectOutsideClick } from "../../utils/utils";
+import {
+  addDynamicInput,
+  checkInputsForDuplicates,
+  deleteDynamicInputs,
+  detectOutsideClick,
+  updateInputText,
+} from "../../utils/utils";
 import uuid from "react-uuid";
 import { IoClose } from "react-icons/io5";
 import downIcon from "../../assets/icon-chevron-down.svg";
@@ -19,6 +25,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
   const [subtaskInputs, setSubtaskInputs] = useState([
     { id: uuid(), value: "" },
   ]);
+  const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
 
   const availableStatuses = currentBoard.columns.map((column) => {
     return column.name;
@@ -26,6 +33,10 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
 
   const [selectedStatus, setSelectedStatus] = useState(availableStatuses[0]);
   const [showStatuses, setShowStatuses] = useState(false);
+
+  const addNewInput = () => {
+    setSubtaskInputs([...subtaskInputs, { id: uuid(), value: "" }]);
+  };
 
   return (
     <div
@@ -100,7 +111,12 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
                   ? "e.g. Make coffee"
                   : index === 1
                   ? "e.g. Drink coffee & smile"
-                  : "Your suntask title...";
+                  : "Your subtask title...";
+
+              const hasADuplicateValue = inputsWithDuplicates.some((item) => {
+                return item === input.id;
+              });
+
               return (
                 <div
                   key={input.id}
@@ -115,22 +131,39 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
                     placeholder={placeholderText}
                     required
                     value={input.value}
-                    onChange={() => {}}
-                    // onChange={(e) => {
-                    //   checkForDuplicates(e, input.id);
-                    //   updateInputValue(e, input);
-                    // }}
+                    onChange={(e) => {
+                      checkInputsForDuplicates(
+                        e,
+                        input.id,
+                        subtaskInputs,
+                        inputsWithDuplicates,
+                        setInputWithDuplicates
+                      );
+
+                      updateInputText(
+                        e,
+                        input,
+                        subtaskInputs,
+                        setSubtaskInputs
+                      );
+                    }}
                   />
                   <IoClose
-                    // onClick={() => deleteInput(input.id)}
+                    onClick={() =>
+                      deleteDynamicInputs(
+                        input.id,
+                        subtaskInputs,
+                        setSubtaskInputs
+                      )
+                    }
                     size={30}
                     className="text-subtextColor hover:text-red transition-colors duration-200 ease-in-out"
                   />
-                  {/* {hasADuplicateValue && (
+                  {hasADuplicateValue && (
                     <p className="absolute right-[20%] font-semibold text-red">
                       Used
                     </p>
-                  )} */}
+                  )}
                 </div>
               );
             })}
@@ -140,7 +173,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
             <button
               type="button"
               className="block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold"
-              //   onClick={addNewInput}
+              onClick={() => addDynamicInput(subtaskInputs, setSubtaskInputs)}
             >
               +Add New Task
             </button>
@@ -178,7 +211,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
                     className={`text-subtextColor pb-2 text-sm`}
                     onClick={() => {
                       // updateTaskColumn(status);
-                      // setShowStatuses(!showStatuses);
+                      setShowStatuses(!showStatuses);
                     }}
                   >
                     {status}
