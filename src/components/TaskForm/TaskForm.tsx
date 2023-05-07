@@ -10,6 +10,7 @@ import uuid from "react-uuid";
 import { IoClose } from "react-icons/io5";
 import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
+import { Task } from "../../types/types";
 
 type Props = {
   showTaskForm: boolean;
@@ -20,7 +21,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { currentBoard } = useGlobalContext()!;
+  const { currentBoard, appData, setAppData } = useGlobalContext()!;
 
   const [subtaskInputs, setSubtaskInputs] = useState([
     { id: uuid(), value: "" },
@@ -44,6 +45,42 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
     setDuplicateTask(hasDuplicates);
   };
 
+  const createNewTask = () => {
+    if (formRef.current) {
+      const newTask: Task = {
+        id: uuid(),
+        title: formRef.current.task_title.value,
+        description: formRef.current.task_description.value,
+        status: selectedStatus,
+        statusId: uuid(),
+        subtasks: subtaskInputs.map((input) => {
+          return { title: input.value, isCompleted: false };
+        }),
+      };
+
+      const updatedCurrentBoard = {
+        ...currentBoard,
+        columns: currentBoard.columns.map((column) => {
+          if (column.name === selectedStatus) {
+            return { ...column, tasks: [...column.tasks, newTask] };
+          } else return column;
+        }),
+      };
+
+      const updatedAppData = {
+        ...appData,
+        boards: appData.boards.map((board) => {
+          if (board.id === currentBoard.id) {
+            return updatedCurrentBoard;
+          } else return board;
+        }),
+      };
+
+      setAppData(updatedAppData);
+      setShowTaskForm(false);
+    }
+  };
+
   return (
     <div
       className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -59,7 +96,13 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
           Add New Task
         </h1>
 
-        <form ref={formRef}>
+        <form
+          ref={formRef}
+          onSubmit={(e) => {
+            e.preventDefault();
+            createNewTask();
+          }}
+        >
           <div className="relative">
             <label
               htmlFor="task title"
@@ -181,7 +224,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
               className="block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold"
               onClick={() => addDynamicInput(subtaskInputs, setSubtaskInputs)}
             >
-              +Add New Task
+              +Add New Subtask
             </button>
           </div>
 
@@ -225,6 +268,13 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
                 );
               })}
             </div>
+
+            <button
+              type="submit"
+              className="block w-full bg-purple text-white py-2 rounded-full mt-2 font-semibold"
+            >
+              Create Task
+            </button>
           </div>
         </form>
       </div>
