@@ -9,9 +9,14 @@ import { detectOutsideClick } from "../../utils/utils";
 type Props = {
   showBoardsModal: boolean;
   setShowBoardsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
+const Navbar = ({
+  showBoardsModal,
+  setShowBoardsModal,
+  setShowTaskForm,
+}: Props) => {
   const {
     currentBoard,
     appData,
@@ -62,7 +67,10 @@ const Navbar = ({ showBoardsModal, setShowBoardsModal }: Props) => {
       </div>
 
       <div className="w-[20%] flex items-center justify-between">
-        <div className="bg-purple p-2 w-[70%] rounded-xl flex items-center justify-center">
+        <div
+          className="bg-purple p-2 w-[70%] rounded-xl flex items-center justify-center"
+          onClick={() => setShowTaskForm(true)}
+        >
           <img src={addIcon} alt="" />
         </div>
         <img src={moreIcon} alt="" onClick={() => setShowOptions(true)} />
