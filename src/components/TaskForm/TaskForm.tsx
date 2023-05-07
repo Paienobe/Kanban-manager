@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import { detectOutsideClick } from "../../utils/utils";
 import uuid from "react-uuid";
 import { IoClose } from "react-icons/io5";
+import downIcon from "../../assets/icon-chevron-down.svg";
+import { useGlobalContext } from "../../context/globalContext";
 
 type Props = {
   showTaskForm: boolean;
@@ -12,9 +14,18 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const { currentBoard } = useGlobalContext()!;
+
   const [subtaskInputs, setSubtaskInputs] = useState([
     { id: uuid(), value: "" },
   ]);
+
+  const availableStatuses = currentBoard.columns.map((column) => {
+    return column.name;
+  });
+
+  const [selectedStatus, setSelectedStatus] = useState(availableStatuses[0]);
+  const [showStatuses, setShowStatuses] = useState(false);
 
   return (
     <div
@@ -104,6 +115,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
                     placeholder={placeholderText}
                     required
                     value={input.value}
+                    onChange={() => {}}
                     // onChange={(e) => {
                     //   checkForDuplicates(e, input.id);
                     //   updateInputValue(e, input);
@@ -130,8 +142,50 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
               className="block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold"
               //   onClick={addNewInput}
             >
-              +Add New Column
+              +Add New Task
             </button>
+          </div>
+
+          <div>
+            <p className="block text-lightModeTitle dark:text-darkModeTitle font-semibold mt-4 mb-2">
+              Status
+            </p>
+            <div
+              className="border border-purple px-2 py-3 rounded-md my-2 flex items-center justify-between"
+              onClick={() => {
+                setShowStatuses(!showStatuses);
+              }}
+            >
+              <p className="text-lightModeTitle dark:text-darkModeTitle text-sm">
+                {selectedStatus}
+              </p>
+              <img src={downIcon} alt="" />
+            </div>
+
+            <div
+              className={`bg-lightBg dark:bg-darkBg px-2 ${
+                showStatuses ? "py-3" : "py-0"
+              } rounded-md overflow-hidden ${
+                showStatuses
+                  ? "max-h-[1000px] transition-[max-height] duration-300 ease-in"
+                  : "max-h-[0px] transition-[max-height] duration-300 ease-smooth"
+              }`}
+            >
+              {availableStatuses.map((status) => {
+                return (
+                  <p
+                    key={uuid()}
+                    className={`text-subtextColor pb-2 text-sm`}
+                    onClick={() => {
+                      // updateTaskColumn(status);
+                      // setShowStatuses(!showStatuses);
+                    }}
+                  >
+                    {status}
+                  </p>
+                );
+              })}
+            </div>
           </div>
         </form>
       </div>
