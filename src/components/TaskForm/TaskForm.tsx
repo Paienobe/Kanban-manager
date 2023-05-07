@@ -33,9 +33,15 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
 
   const [selectedStatus, setSelectedStatus] = useState(availableStatuses[0]);
   const [showStatuses, setShowStatuses] = useState(false);
+  const [duplicateTask, setDuplicateTask] = useState(false);
 
-  const addNewInput = () => {
-    setSubtaskInputs([...subtaskInputs, { id: uuid(), value: "" }]);
+  const checkForDuplicateTask = (text: string) => {
+    const hasDuplicates = currentBoard.columns.some((column) => {
+      return column.tasks.some((task) => {
+        return task.title.toLowerCase() === text.toLowerCase();
+      });
+    });
+    setDuplicateTask(hasDuplicates);
   };
 
   return (
@@ -53,7 +59,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
           Add New Task
         </h1>
 
-        <form>
+        <form ref={formRef}>
           <div className="relative">
             <label
               htmlFor="task title"
@@ -69,15 +75,15 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
                 !true ? "border-red" : "border-subtextColor"
               }`}
-              //   onChange={(e) => {
-              //     checkForDuplicateBoardName(e.target.value);
-              //   }}
+              onChange={(e) => {
+                checkForDuplicateTask(e.target.value);
+              }}
             />
-            {/* {boardNameIsUsed && (
+            {duplicateTask && (
               <p className="absolute top-[55%] right-[2.5%] font-semibold text-red">
                 Used
               </p>
-            )} */}
+            )}
           </div>
 
           <div className="mt-4">
@@ -210,7 +216,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
                     key={uuid()}
                     className={`text-subtextColor pb-2 text-sm`}
                     onClick={() => {
-                      // updateTaskColumn(status);
+                      setSelectedStatus(status);
                       setShowStatuses(!showStatuses);
                     }}
                   >
