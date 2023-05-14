@@ -21,7 +21,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     useGlobalContext()!;
 
   const editableColumns = currentBoard.columns.map((column) => {
-    return { id: String(column.id), value: column.name };
+    return { id: column.id, value: column.name };
   });
 
   const defaultColumns = [
@@ -64,6 +64,49 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     }
   };
 
+  const editCurrentBoard = () => {
+    if (!boardNameIsUsed && inputsWithDuplicates.length < 1) {
+      if (formRef.current) {
+        const boardName = formRef.current.board_name.value;
+        const boardColumns = columnInputs.map((obj) => {
+          const currentColumn = currentBoard.columns.find((column) => {
+            return column.id === obj.id;
+          });
+          if (currentColumn) {
+            return {
+              id: currentColumn.id,
+              name: formRef.current?.[`input_${obj.id}`].value,
+              tasks: currentColumn.tasks,
+            };
+          } else {
+            return {
+              id: obj.id,
+              name: formRef.current?.[`input_${obj.id}`].value,
+              tasks: [],
+            };
+          }
+        });
+
+        const updatedBoard: Board = {
+          id: currentBoard.id,
+          name: boardName,
+          columns: boardColumns,
+        };
+
+        const updatedAppData = {
+          boards: appData.boards.map((board) => {
+            if (board.id === currentBoard.id) {
+              return updatedBoard;
+            } else return board;
+          }),
+        };
+
+        setAppData(updatedAppData);
+        setShowBoardForm(false);
+      }
+    }
+  };
+
   const checkForDuplicateBoardName = (name: string) => {
     const duplicateIsPresent = appData.boards.some((board) => {
       return board.name.toLowerCase() === name.trim().toLowerCase();
@@ -89,7 +132,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
           ref={formRef}
           onSubmit={(e) => {
             e.preventDefault();
-            createBoard();
+            !editBoard ? createBoard() : editCurrentBoard();
           }}
         >
           <div className="relative">
@@ -209,7 +252,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               type="submit"
               className="block w-full bg-purple text-white py-2 rounded-full mt-2 font-semibold"
             >
-              Create New Board
+              {!editBoard ? "Create New Board" : "Save Changes"}
             </button>
           </div>
         </form>
