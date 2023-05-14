@@ -109,7 +109,10 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
 
   const checkForDuplicateBoardName = (name: string) => {
     const duplicateIsPresent = appData.boards.some((board) => {
-      return board.name.toLowerCase() === name.trim().toLowerCase();
+      return (
+        board.name.toLowerCase() === name.trim().toLowerCase() &&
+        board.name.toLowerCase() !== currentBoard.name.toLowerCase()
+      );
     });
     setBoardNameIsUsed(duplicateIsPresent);
   };
@@ -157,7 +160,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                 checkForDuplicateBoardName(e.target.value);
               }}
             />
-            {boardNameIsUsed && !editBoard && (
+            {boardNameIsUsed && (
               <p className="absolute top-[55%] right-[2.5%] font-semibold text-red">
                 Used
               </p>
