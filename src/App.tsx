@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import AllBoardsModal from "./components/AllBoardsModal/AllBoardsModal";
 import BoardForm from "./components/BoardForm/BoardForm";
@@ -9,8 +9,7 @@ import { useGlobalContext } from "./context/globalContext";
 import TaskForm from "./components/TaskForm/TaskForm";
 
 function App() {
-  const { deleteItem, showDeleteModal, setShowDeleteModal } =
-    useGlobalContext()!;
+  const { showDeleteModal, setShowDeleteModal } = useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -21,6 +20,8 @@ function App() {
         showBoardsModal={showBoardsModal}
         setShowBoardsModal={setShowBoardsModal}
         setShowTaskForm={setShowTaskForm}
+        showBoardForm={showBoardForm}
+        setShowBoardForm={setShowBoardForm}
       />
 
       <TasksContainer />

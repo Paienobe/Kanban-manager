@@ -17,13 +17,23 @@ type Props = {
 };
 
 const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
-  const { appData, setAppData, setCurrentBoardIndex } = useGlobalContext()!;
+  const { appData, setAppData, setCurrentBoardIndex, editBoard, currentBoard } =
+    useGlobalContext()!;
+
+  const editableColumns = currentBoard.columns.map((column) => {
+    return { id: String(column.id), value: column.name };
+  });
+
+  const defaultColumns = [
+    { id: uuid(), value: "" },
+    { id: uuid(), value: "" },
+  ];
+
   const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
   const [boardNameIsUsed, setBoardNameIsUsed] = useState(false);
-  const [columnInputs, setColumnInputs] = useState<DynamicInput[]>([
-    { id: uuid(), value: "" },
-    { id: uuid(), value: "" },
-  ]);
+  const [columnInputs, setColumnInputs] = useState<DynamicInput[]>(
+    !editBoard ? defaultColumns : editableColumns
+  );
 
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -71,7 +81,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
         className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] text-left max-h-[90vh] overflow-y-auto"
       >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
-          Add New Board
+          {!editBoard ? "Add New Board" : "Edit Board"}
         </h1>
         <form
           ref={formRef}
@@ -95,6 +105,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
                 boardNameIsUsed ? "border-red" : "border-subtextColor"
               }`}
+              defaultValue={!editBoard ? "" : currentBoard.name}
               onChange={(e) => {
                 checkForDuplicateBoardName(e.target.value);
               }}
