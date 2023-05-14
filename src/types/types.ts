@@ -40,6 +40,6 @@ export type DeleteType = {
 };
 
 export type DynamicInput = {
-  id: string;
+  id: string | number;
   value: string;
 };

@@ -17,13 +17,25 @@ type Props = {
 };
 
 const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
-  const { appData, setAppData, setCurrentBoardIndex } = useGlobalContext()!;
-  const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
+  const { appData, setAppData, setCurrentBoardIndex, editBoard, currentBoard } =
+    useGlobalContext()!;
+
+  const editableColumns = currentBoard.columns.map((column) => {
+    return { id: column.id, value: column.name };
+  });
+
+  const defaultColumns = [
+    { id: uuid(), value: "" },
+    { id: uuid(), value: "" },
+  ];
+
+  const [inputsWithDuplicates, setInputWithDuplicates] = useState<
+    (string | number)[]
+  >([]);
   const [boardNameIsUsed, setBoardNameIsUsed] = useState(false);
-  const [columnInputs, setColumnInputs] = useState<DynamicInput[]>([
-    { id: uuid(), value: "" },
-    { id: uuid(), value: "" },
-  ]);
+  const [columnInputs, setColumnInputs] = useState<DynamicInput[]>(
+    !editBoard ? defaultColumns : editableColumns
+  );
 
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -52,9 +64,55 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     }
   };
 
+  const editCurrentBoard = () => {
+    if (!boardNameIsUsed && inputsWithDuplicates.length < 1) {
+      if (formRef.current) {
+        const boardName = formRef.current.board_name.value;
+        const boardColumns = columnInputs.map((obj) => {
+          const currentColumn = currentBoard.columns.find((column) => {
+            return column.id === obj.id;
+          });
+          if (currentColumn) {
+            return {
+              id: currentColumn.id,
+              name: formRef.current?.[`input_${obj.id}`].value,
+              tasks: currentColumn.tasks,
+            };
+          } else {
+            return {
+              id: obj.id,
+              name: formRef.current?.[`input_${obj.id}`].value,
+              tasks: [],
+            };
+          }
+        });
+
+        const updatedBoard: Board = {
+          id: currentBoard.id,
+          name: boardName,
+          columns: boardColumns,
+        };
+
+        const updatedAppData = {
+          boards: appData.boards.map((board) => {
+            if (board.id === currentBoard.id) {
+              return updatedBoard;
+            } else return board;
+          }),
+        };
+
+        setAppData(updatedAppData);
+        setShowBoardForm(false);
+      }
+    }
+  };
+
   const checkForDuplicateBoardName = (name: string) => {
     const duplicateIsPresent = appData.boards.some((board) => {
-      return board.name.toLowerCase() === name.trim().toLowerCase();
+      return (
+        board.name.toLowerCase() === name.trim().toLowerCase() &&
+        board.name.toLowerCase() !== currentBoard.name.toLowerCase()
+      );
     });
     setBoardNameIsUsed(duplicateIsPresent);
   };
@@ -71,13 +129,13 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
         className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] text-left max-h-[90vh] overflow-y-auto"
       >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
-          Add New Board
+          {!editBoard ? "Add New Board" : "Edit Board"}
         </h1>
         <form
           ref={formRef}
           onSubmit={(e) => {
             e.preventDefault();
-            createBoard();
+            !editBoard ? createBoard() : editCurrentBoard();
           }}
         >
           <div className="relative">
@@ -93,8 +151,11 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               placeholder="e.g. Web Designer"
               required
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
-                boardNameIsUsed ? "border-red" : "border-subtextColor"
+                boardNameIsUsed && !editBoard
+                  ? "border-red"
+                  : "border-subtextColor"
               }`}
+              defaultValue={!editBoard ? "" : currentBoard.name}
               onChange={(e) => {
                 checkForDuplicateBoardName(e.target.value);
               }}
@@ -194,7 +255,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               type="submit"
               className="block w-full bg-purple text-white py-2 rounded-full mt-2 font-semibold"
             >
-              Create New Board
+              {!editBoard ? "Create New Board" : "Save Changes"}
             </button>
           </div>
         </form>

@@ -14,6 +14,8 @@ type ContextType = {
   setDeleteItem: React.Dispatch<React.SetStateAction<DeleteType>>;
   showDeleteModal: boolean;
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  editBoard: boolean;
+  setEditBoard: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -31,6 +33,7 @@ const AppProvider = ({ children }: ProviderProps) => {
     type: "",
     id: "",
   });
+  const [editBoard, setEditBoard] = useState(false);
 
   useEffect(() => {
     const documentElement = document.documentElement;
@@ -52,6 +55,8 @@ const AppProvider = ({ children }: ProviderProps) => {
         setDeleteItem,
         showDeleteModal,
         setShowDeleteModal,
+        editBoard,
+        setEditBoard,
       }}
     >
       {children}
