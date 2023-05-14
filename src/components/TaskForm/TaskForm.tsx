@@ -10,7 +10,7 @@ import uuid from "react-uuid";
 import { IoClose } from "react-icons/io5";
 import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
-import { Task } from "../../types/types";
+import { DynamicInput, Task } from "../../types/types";
 
 type Props = {
   showTaskForm: boolean;
@@ -23,10 +23,12 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
 
   const { currentBoard, appData, setAppData } = useGlobalContext()!;
 
-  const [subtaskInputs, setSubtaskInputs] = useState([
+  const [subtaskInputs, setSubtaskInputs] = useState<DynamicInput[]>([
     { id: uuid(), value: "" },
   ]);
-  const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
+  const [inputsWithDuplicates, setInputWithDuplicates] = useState<
+    (string | number)[]
+  >([]);
 
   const availableStatuses = currentBoard.columns.map((column) => {
     return column.name;

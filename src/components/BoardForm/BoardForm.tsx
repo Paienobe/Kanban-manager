@@ -29,7 +29,9 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     { id: uuid(), value: "" },
   ];
 
-  const [inputsWithDuplicates, setInputWithDuplicates] = useState<string[]>([]);
+  const [inputsWithDuplicates, setInputWithDuplicates] = useState<
+    (string | number)[]
+  >([]);
   const [boardNameIsUsed, setBoardNameIsUsed] = useState(false);
   const [columnInputs, setColumnInputs] = useState<DynamicInput[]>(
     !editBoard ? defaultColumns : editableColumns
@@ -103,14 +105,16 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
               placeholder="e.g. Web Designer"
               required
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
-                boardNameIsUsed ? "border-red" : "border-subtextColor"
+                boardNameIsUsed && !editBoard
+                  ? "border-red"
+                  : "border-subtextColor"
               }`}
               defaultValue={!editBoard ? "" : currentBoard.name}
               onChange={(e) => {
                 checkForDuplicateBoardName(e.target.value);
               }}
             />
-            {boardNameIsUsed && (
+            {boardNameIsUsed && !editBoard && (
               <p className="absolute top-[55%] right-[2.5%] font-semibold text-red">
                 Used
               </p>
