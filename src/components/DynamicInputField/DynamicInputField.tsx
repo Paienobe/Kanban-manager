@@ -17,6 +17,7 @@ type Props = {
   setInputWithDuplicates: React.Dispatch<
     React.SetStateAction<(string | number)[]>
   >;
+  fixedItems?: DynamicInput[];
 };
 
 const DynamicInputField = ({
@@ -27,7 +28,12 @@ const DynamicInputField = ({
   setColumnInputs,
   inputsWithDuplicates,
   setInputWithDuplicates,
+  fixedItems,
 }: Props) => {
+  const itemIsFixed = fixedItems?.some((item) => {
+    return item.id === input.id;
+  });
+
   return (
     <div className="flex items-center justify-between mb-2">
       <input
@@ -37,6 +43,7 @@ const DynamicInputField = ({
           hasADuplicateValue ? "border-red" : "border-subtextColor"
         }`}
         placeholder={placeholderText}
+        readOnly={itemIsFixed}
         required
         value={input.value}
         onChange={(e) => {
@@ -52,10 +59,13 @@ const DynamicInputField = ({
       />
       <IoClose
         onClick={() =>
+          !itemIsFixed &&
           deleteDynamicInputs(input.id, columnInputs, setColumnInputs)
         }
         size={30}
-        className="text-subtextColor hover:text-red transition-colors duration-200 ease-in-out"
+        className={`text-subtextColor hover:text-red transition-colors duration-200 ease-in-out ${
+          itemIsFixed ? "opacity-20" : ""
+        }`}
       />
       {hasADuplicateValue && (
         <p className="absolute right-[20%] font-semibold text-red">Used</p>

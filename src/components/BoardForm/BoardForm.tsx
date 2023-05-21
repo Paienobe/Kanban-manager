@@ -202,8 +202,16 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
           <div className="mt-4">
             <button
               type="button"
-              className="block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold"
-              onClick={() => addDynamicInput(columnInputs, setColumnInputs)}
+              className={`block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold ${
+                columnInputs.length < 6
+                  ? "opacity-100"
+                  : "opacity-30 cursor-not-allowed"
+              }`}
+              onClick={() => {
+                if (columnInputs.length < 6) {
+                  addDynamicInput(columnInputs, setColumnInputs);
+                }
+              }}
             >
               +Add New Column
             </button>
