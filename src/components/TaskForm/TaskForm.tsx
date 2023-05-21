@@ -11,6 +11,7 @@ import { IoClose } from "react-icons/io5";
 import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
 import { DynamicInput, Task } from "../../types/types";
+import DynamicInputField from "../DynamicInputField/DynamicInputField";
 
 type Props = {
   showTaskForm: boolean;
@@ -169,53 +170,16 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
               });
 
               return (
-                <div
+                <DynamicInputField
                   key={input.id}
-                  className="flex items-center justify-between mb-2"
-                >
-                  <input
-                    type="text"
-                    name={`input_${input.id}`}
-                    className={`p-2 rounded bg-transparent border  w-[90%] box-border text-lightModeTitle dark:text-darkModeTitle outline-none relative ${
-                      !true ? "border-red" : "border-subtextColor"
-                    }`}
-                    placeholder={placeholderText}
-                    required
-                    value={input.value}
-                    onChange={(e) => {
-                      checkInputsForDuplicates(
-                        e,
-                        input.id,
-                        subtaskInputs,
-                        inputsWithDuplicates,
-                        setInputWithDuplicates
-                      );
-
-                      updateInputText(
-                        e,
-                        input,
-                        subtaskInputs,
-                        setSubtaskInputs
-                      );
-                    }}
-                  />
-                  <IoClose
-                    onClick={() =>
-                      deleteDynamicInputs(
-                        input.id,
-                        subtaskInputs,
-                        setSubtaskInputs
-                      )
-                    }
-                    size={30}
-                    className="text-subtextColor hover:text-red transition-colors duration-200 ease-in-out"
-                  />
-                  {hasADuplicateValue && (
-                    <p className="absolute right-[20%] font-semibold text-red">
-                      Used
-                    </p>
-                  )}
-                </div>
+                  input={input}
+                  hasADuplicateValue={hasADuplicateValue}
+                  columnInputs={subtaskInputs}
+                  setColumnInputs={setSubtaskInputs}
+                  placeholderText={placeholderText}
+                  inputsWithDuplicates={inputsWithDuplicates}
+                  setInputWithDuplicates={setInputWithDuplicates}
+                />
               );
             })}
           </div>
