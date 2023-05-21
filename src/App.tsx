@@ -26,7 +26,7 @@ function App() {
         setShowBoardForm={setShowBoardForm}
       />
 
-      <TasksContainer />
+      <TasksContainer setShowColumnForm={setShowColumnForm} />
 
       {showBoardsModal && (
         <AllBoardsModal

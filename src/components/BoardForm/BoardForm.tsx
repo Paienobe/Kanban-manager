@@ -1,13 +1,6 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import uuid from "react-uuid";
-import { IoClose } from "react-icons/io5";
-import {
-  addDynamicInput,
-  checkInputsForDuplicates,
-  deleteDynamicInputs,
-  detectOutsideClick,
-  updateInputText,
-} from "../../utils/utils";
+import { addDynamicInput, detectOutsideClick } from "../../utils/utils";
 import { Board, DynamicInput } from "../../types/types";
 import { useGlobalContext } from "../../context/globalContext";
 import DynamicInputField from "../DynamicInputField/DynamicInputField";

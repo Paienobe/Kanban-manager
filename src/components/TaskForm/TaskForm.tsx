@@ -1,13 +1,6 @@
 import React, { useRef, useState } from "react";
-import {
-  addDynamicInput,
-  checkInputsForDuplicates,
-  deleteDynamicInputs,
-  detectOutsideClick,
-  updateInputText,
-} from "../../utils/utils";
+import { addDynamicInput, detectOutsideClick } from "../../utils/utils";
 import uuid from "react-uuid";
-import { IoClose } from "react-icons/io5";
 import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
 import { DynamicInput, Task } from "../../types/types";

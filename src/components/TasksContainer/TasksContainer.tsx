@@ -5,8 +5,13 @@ import { MdCircle } from "react-icons/md";
 import TaskModal from "../TaskModal/TaskModal";
 import { SelectedTask, Task } from "../../types/types";
 import { columnHexCodes } from "../../constants/constants";
+import ColumnAdder from "../ColumnAdder/ColumnAdder";
 
-const TasksContainer = () => {
+type Props = {
+  setShowColumnForm: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const TasksContainer = ({ setShowColumnForm }: Props) => {
   const { currentBoard } = useGlobalContext()!;
 
   const [showViewModal, setShowViewModal] = useState(false);
@@ -14,7 +19,6 @@ const TasksContainer = () => {
     id: "",
     status: "",
   });
-  const [overColumnAdder, setOverColumnAdder] = useState(false);
 
   const boardsAreAvailable = currentBoard?.columns.length > 0;
 
@@ -55,19 +59,7 @@ const TasksContainer = () => {
           })}
 
           {currentBoard?.columns.length < 6 ? (
-            <div
-              className="min-w-[90%] mt-[125px] flex items-center justify-center min-h-[75vh] bg-gradient-to-b from-darkTiles to-transparent rounded-lg cursor-pointer"
-              onMouseEnter={() => setOverColumnAdder(!overColumnAdder)}
-              onMouseLeave={() => setOverColumnAdder(!overColumnAdder)}
-            >
-              <h1
-                className={` font-semibold transition-all duration-300 ease-in-out ${
-                  overColumnAdder ? "text-purple" : "text-subtextColor"
-                }`}
-              >
-                +New Column
-              </h1>
-            </div>
+            <ColumnAdder setShowColumnForm={setShowColumnForm} />
           ) : (
             <></>
           )}

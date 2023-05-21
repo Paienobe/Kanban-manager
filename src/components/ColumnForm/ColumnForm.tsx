@@ -1,12 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import uuid from "react-uuid";
-import {
-  checkInputsForDuplicates,
-  deleteDynamicInputs,
-  updateInputText,
-} from "../../utils/utils";
-import { IoClose } from "react-icons/io5";
+import { detectOutsideClick } from "../../utils/utils";
 import { DynamicInput } from "../../types/types";
 import DynamicInputField from "../DynamicInputField/DynamicInputField";
 
@@ -24,14 +19,25 @@ const ColumnForm = ({ showColumnForm, setShowColumnForm }: Props) => {
     (string | number)[]
   >([]);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] text-left max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={(e) => {
+        detectOutsideClick(e, modalRef, showColumnForm, setShowColumnForm);
+      }}
+    >
+      <div
+        ref={modalRef}
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] text-left max-h-[90vh] overflow-y-auto"
+      >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
           Add New Column
         </h1>
 
-        <form>
+        <form ref={formRef}>
           <label
             htmlFor="board name"
             className="block text-lightModeTitle dark:text-darkModeTitle font-semibold mb-2"
