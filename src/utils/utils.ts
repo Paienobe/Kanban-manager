@@ -39,7 +39,11 @@ export const checkInputsForDuplicates = (
   idsArraySetter: React.Dispatch<React.SetStateAction<(string | number)[]>>
 ) => {
   const duplicatesExist = inputsArray.some((obj) => {
-    return obj.id !== id && obj.value && obj.value === e.target.value.trim();
+    return (
+      obj.id !== id &&
+      obj.value.toLowerCase() &&
+      obj.value.toLowerCase() === e.target.value.trim().toLowerCase()
+    );
   });
 
   if (duplicatesExist) {

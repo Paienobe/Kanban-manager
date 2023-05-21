@@ -7,12 +7,14 @@ import Navbar from "./components/Navbar/Navbar";
 import TasksContainer from "./components/TasksContainer/TasksContainer";
 import { useGlobalContext } from "./context/globalContext";
 import TaskForm from "./components/TaskForm/TaskForm";
+import ColumnForm from "./components/ColumnForm/ColumnForm";
 
 function App() {
   const { showDeleteModal, setShowDeleteModal } = useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [showColumnForm, setShowColumnForm] = useState(false);
 
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
@@ -24,7 +26,7 @@ function App() {
         setShowBoardForm={setShowBoardForm}
       />
 
-      <TasksContainer />
+      <TasksContainer setShowColumnForm={setShowColumnForm} />
 
       {showBoardsModal && (
         <AllBoardsModal
@@ -52,6 +54,13 @@ function App() {
         <TaskForm
           showTaskForm={showTaskForm}
           setShowTaskForm={setShowTaskForm}
+        />
+      )}
+
+      {showColumnForm && (
+        <ColumnForm
+          showColumnForm={showColumnForm}
+          setShowColumnForm={setShowColumnForm}
         />
       )}
     </div>

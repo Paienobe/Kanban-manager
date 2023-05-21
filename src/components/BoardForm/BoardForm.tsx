@@ -1,15 +1,9 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import uuid from "react-uuid";
-import { IoClose } from "react-icons/io5";
-import {
-  addDynamicInput,
-  checkInputsForDuplicates,
-  deleteDynamicInputs,
-  detectOutsideClick,
-  updateInputText,
-} from "../../utils/utils";
+import { addDynamicInput, detectOutsideClick } from "../../utils/utils";
 import { Board, DynamicInput } from "../../types/types";
 import { useGlobalContext } from "../../context/globalContext";
+import DynamicInputField from "../DynamicInputField/DynamicInputField";
 
 type Props = {
   showBoardForm: boolean;
@@ -190,54 +184,16 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
                 });
 
                 return (
-                  <div
+                  <DynamicInputField
                     key={input.id}
-                    className="flex items-center justify-between mb-2"
-                  >
-                    <input
-                      type="text"
-                      name={`input_${input.id}`}
-                      className={`p-2 rounded bg-transparent border  w-[90%] box-border text-lightModeTitle dark:text-darkModeTitle outline-none relative ${
-                        hasADuplicateValue
-                          ? "border-red"
-                          : "border-subtextColor"
-                      }`}
-                      placeholder={placeholderText}
-                      required
-                      value={input.value}
-                      onChange={(e) => {
-                        checkInputsForDuplicates(
-                          e,
-                          input.id,
-                          columnInputs,
-                          inputsWithDuplicates,
-                          setInputWithDuplicates
-                        );
-                        updateInputText(
-                          e,
-                          input,
-                          columnInputs,
-                          setColumnInputs
-                        );
-                      }}
-                    />
-                    <IoClose
-                      onClick={() =>
-                        deleteDynamicInputs(
-                          input.id,
-                          columnInputs,
-                          setColumnInputs
-                        )
-                      }
-                      size={30}
-                      className="text-subtextColor hover:text-red transition-colors duration-200 ease-in-out"
-                    />
-                    {hasADuplicateValue && (
-                      <p className="absolute right-[20%] font-semibold text-red">
-                        Used
-                      </p>
-                    )}
-                  </div>
+                    input={input}
+                    hasADuplicateValue={hasADuplicateValue}
+                    columnInputs={columnInputs}
+                    setColumnInputs={setColumnInputs}
+                    placeholderText={placeholderText}
+                    inputsWithDuplicates={inputsWithDuplicates}
+                    setInputWithDuplicates={setInputWithDuplicates}
+                  />
                 );
               })}
             </div>
@@ -246,8 +202,16 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
           <div className="mt-4">
             <button
               type="button"
-              className="block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold"
-              onClick={() => addDynamicInput(columnInputs, setColumnInputs)}
+              className={`block w-full py-2 bg-lightBg dark:bg-white text-purple rounded-full font-semibold ${
+                columnInputs.length < 6
+                  ? "opacity-100"
+                  : "opacity-30 cursor-not-allowed"
+              }`}
+              onClick={() => {
+                if (columnInputs.length < 6) {
+                  addDynamicInput(columnInputs, setColumnInputs);
+                }
+              }}
             >
               +Add New Column
             </button>
