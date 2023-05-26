@@ -191,7 +191,7 @@ const TaskModal = ({
                 className="text-subtextColor font-medium pb-2"
                 onClick={() => setShowViewModal(false)}
               >
-                Edit Board
+                Edit Task
               </p>
               <p
                 className="text-red font-medium"
@@ -206,7 +206,7 @@ const TaskModal = ({
                   setShowOptions(false);
                 }}
               >
-                Delete Board
+                Delete Task
               </p>
             </div>
           )}
