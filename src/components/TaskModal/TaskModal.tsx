@@ -1,7 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import moreIcon from "../../assets/icon-vertical-ellipsis.svg";
-import { detectOutsideClick, getCompletedSubtasks } from "../../utils/utils";
+import {
+  detectOutsideClick,
+  getCompletedSubtasks,
+  getCurrentColumn,
+  getViewedTask,
+} from "../../utils/utils";
 import uuid from "react-uuid";
 import checkMark from "../../assets/icon-check.svg";
 import downIcon from "../../assets/icon-chevron-down.svg";
@@ -18,12 +23,16 @@ type Props = {
   showViewModal: boolean;
   setShowViewModal: React.Dispatch<React.SetStateAction<boolean>>;
   selectedTask: SelectedTask;
+  setShowTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedTask: React.Dispatch<React.SetStateAction<SelectedTask>>;
 };
 
 const TaskModal = ({
   showViewModal,
   setShowViewModal,
   selectedTask,
+  setShowTaskForm,
+  setSelectedTask,
 }: Props) => {
   const {
     currentBoard,
@@ -31,21 +40,16 @@ const TaskModal = ({
     appData,
     setShowDeleteModal,
     setDeleteItem,
+    setEditTask,
   } = useGlobalContext()!;
 
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const [showOptions, setShowOptions] = useState(false);
 
-  const currentColumn = currentBoard.columns.find((column) => {
-    return column.tasks.find((task) => {
-      return task.id === selectedTask!.id;
-    });
-  });
+  const currentColumn = getCurrentColumn(currentBoard, selectedTask);
 
-  const viewedTask = currentColumn?.tasks.find((task) => {
-    return task.id === selectedTask.id;
-  });
+  const viewedTask = getViewedTask(currentColumn!, selectedTask);
 
   const completedSubtasks = getCompletedSubtasks(
     viewedTask?.subtasks!
@@ -161,6 +165,8 @@ const TaskModal = ({
     };
   }, [showOptions]);
 
+  const chosenTask = { id: viewedTask?.id!, status: viewedTask?.status! };
+
   return (
     <div
       className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -189,7 +195,12 @@ const TaskModal = ({
             >
               <p
                 className="text-subtextColor font-medium pb-2"
-                onClick={() => setShowViewModal(false)}
+                onClick={() => {
+                  setShowViewModal(false);
+                  setShowTaskForm(true);
+                  setEditTask(true);
+                  setSelectedTask(chosenTask);
+                }}
               >
                 Edit Task
               </p>

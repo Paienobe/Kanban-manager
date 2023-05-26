@@ -16,6 +16,8 @@ type ContextType = {
   setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   editBoard: boolean;
   setEditBoard: React.Dispatch<React.SetStateAction<boolean>>;
+  editTask: boolean;
+  setEditTask: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -34,6 +36,7 @@ const AppProvider = ({ children }: ProviderProps) => {
     id: "",
   });
   const [editBoard, setEditBoard] = useState(false);
+  const [editTask, setEditTask] = useState(false);
 
   useEffect(() => {
     const documentElement = document.documentElement;
@@ -57,6 +60,8 @@ const AppProvider = ({ children }: ProviderProps) => {
         setShowDeleteModal,
         editBoard,
         setEditBoard,
+        editTask,
+        setEditTask,
       }}
     >
       {children}

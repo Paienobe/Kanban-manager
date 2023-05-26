@@ -1,25 +1,47 @@
 import React, { useRef, useState } from "react";
-import { addDynamicInput, detectOutsideClick } from "../../utils/utils";
+import {
+  addDynamicInput,
+  detectOutsideClick,
+  getCurrentColumn,
+  getViewedTask,
+} from "../../utils/utils";
 import uuid from "react-uuid";
 import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
-import { DynamicInput, Task } from "../../types/types";
+import { DynamicInput, SelectedTask, Task } from "../../types/types";
 import DynamicInputField from "../DynamicInputField/DynamicInputField";
 
 type Props = {
   showTaskForm: boolean;
   setShowTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedTask: SelectedTask;
+  setSelectedTask: React.Dispatch<React.SetStateAction<SelectedTask>>;
 };
 
-const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
+const TaskForm = ({
+  showTaskForm,
+  setShowTaskForm,
+  selectedTask,
+  setSelectedTask,
+}: Props) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { currentBoard, appData, setAppData } = useGlobalContext()!;
+  const { currentBoard, appData, setAppData, editTask } = useGlobalContext()!;
 
-  const [subtaskInputs, setSubtaskInputs] = useState<DynamicInput[]>([
-    { id: uuid(), value: "" },
-  ]);
+  const currentColumn = getCurrentColumn(currentBoard, selectedTask);
+
+  const viewedTask = getViewedTask(currentColumn!, selectedTask);
+
+  const currentTaskSubtasks = viewedTask?.subtasks.map((subtask) => {
+    return { id: uuid(), value: subtask.title };
+  });
+
+  const defaultSubtasks = [{ id: uuid(), value: "" }];
+
+  const [subtaskInputs, setSubtaskInputs] = useState<DynamicInput[]>(
+    editTask ? currentTaskSubtasks! : defaultSubtasks
+  );
   const [inputsWithDuplicates, setInputWithDuplicates] = useState<
     (string | number)[]
   >([]);
@@ -28,7 +50,9 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
     return column.name;
   });
 
-  const [selectedStatus, setSelectedStatus] = useState(availableStatuses[0]);
+  const [selectedStatus, setSelectedStatus] = useState(
+    editTask ? viewedTask?.status! : availableStatuses[0]
+  );
   const [showStatuses, setShowStatuses] = useState(false);
   const [duplicateTask, setDuplicateTask] = useState(false);
 
@@ -89,7 +113,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
         ref={modalRef}
       >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
-          Add New Task
+          {!editTask ? "Add New Task" : "Edit Task"}
         </h1>
 
         <form
@@ -114,6 +138,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
                 !true ? "border-red" : "border-subtextColor"
               }`}
+              defaultValue={!editTask ? "" : viewedTask?.title}
               onChange={(e) => {
                 checkForDuplicateTask(e.target.value);
               }}
@@ -137,6 +162,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm }: Props) => {
               placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
               required
               rows={3}
+              defaultValue={!editTask ? "" : viewedTask?.description}
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${
                 !true ? "border-red" : "border-subtextColor"
               }`}

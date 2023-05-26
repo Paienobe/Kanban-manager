@@ -1,5 +1,5 @@
 import React from "react";
-import { DynamicInput, Subtask } from "../types/types";
+import { Board, Column, DynamicInput, SelectedTask, Subtask } from "../types/types";
 import uuid from "react-uuid";
 
 export const getCompletedSubtasks = (subtasks: Subtask[]) => {
@@ -90,3 +90,17 @@ export const addDynamicInput = (
 ) => {
   inputsArraySetter([...inputsArray, { id: uuid(), value: "" }]);
 };
+
+export const getCurrentColumn = (currentBoard: Board, selectedTask: SelectedTask) => {
+  return currentBoard.columns.find((column) => {
+    return column.tasks.find((task) => {
+      return task.id === selectedTask!.id;
+    });
+  })
+}
+
+export const getViewedTask = (currentColumn: Column, selectedTask: SelectedTask) => {
+  return currentColumn?.tasks.find((task) => {
+    return task.id === selectedTask.id;
+  });
+}
