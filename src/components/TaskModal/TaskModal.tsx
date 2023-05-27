@@ -19,6 +19,7 @@ import {
   Task,
 } from "../../types/types";
 import StatusDropDown from "../StatusDropdown/StatusDropDown";
+import TaskToggle from "../TaskToggle/TaskToggle";
 
 type Props = {
   showViewModal: boolean;
@@ -235,32 +236,11 @@ const TaskModal = ({
         <div>
           {viewedTask?.subtasks.map((subtask) => {
             return (
-              <div
+              <TaskToggle
                 key={uuid()}
-                className="flex items-center my-2 bg-lightBg dark:bg-darkBg p-3 rounded-md"
-              >
-                <div
-                  className={`min-w-[20px] min-h-[20px] rounded-md ${
-                    subtask.isCompleted
-                      ? "bg-purple"
-                      : "bg-lightTiles dark:bg-darkTiles"
-                  } mr-4 flex items-center justify-center border border-subtextColor border-opacity-30`}
-                  onClick={() => {
-                    updatedSubtask(subtask);
-                  }}
-                >
-                  {subtask.isCompleted && <img src={checkMark} alt="" />}
-                </div>
-                <p
-                  className={`${
-                    subtask.isCompleted
-                      ? "text-subtextColor line-through"
-                      : "text-black dark:text-white"
-                  } font-medium text-sm`}
-                >
-                  {subtask.title}
-                </p>
-              </div>
+                subtask={subtask}
+                updatedSubtask={updatedSubtask}
+              />
             );
           })}
         </div>
