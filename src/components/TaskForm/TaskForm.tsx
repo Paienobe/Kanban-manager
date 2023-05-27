@@ -10,6 +10,7 @@ import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
 import { DynamicInput, SelectedTask, Task } from "../../types/types";
 import DynamicInputField from "../DynamicInputField/DynamicInputField";
+import StatusDropDown from "../StatusDropdown/StatusDropDown";
 
 type Props = {
   showTaskForm: boolean;
@@ -217,42 +218,13 @@ const TaskForm = ({
             <p className="block text-lightModeTitle dark:text-darkModeTitle font-semibold mt-4 mb-2">
               Status
             </p>
-            <div
-              className="border border-purple px-2 py-3 rounded-md my-2 flex items-center justify-between"
-              onClick={() => {
-                setShowStatuses(!showStatuses);
-              }}
-            >
-              <p className="text-lightModeTitle dark:text-darkModeTitle text-sm">
-                {selectedStatus}
-              </p>
-              <img src={downIcon} alt="" />
-            </div>
 
-            <div
-              className={`bg-lightBg dark:bg-darkBg px-2 ${
-                showStatuses ? "py-3" : "py-0"
-              } rounded-md overflow-hidden ${
-                showStatuses
-                  ? "max-h-[1000px] transition-[max-height] duration-300 ease-in"
-                  : "max-h-[0px] transition-[max-height] duration-300 ease-smooth"
-              }`}
-            >
-              {availableStatuses.map((status) => {
-                return (
-                  <p
-                    key={uuid()}
-                    className={`text-subtextColor pb-2 text-sm`}
-                    onClick={() => {
-                      setSelectedStatus(status);
-                      setShowStatuses(!showStatuses);
-                    }}
-                  >
-                    {status}
-                  </p>
-                );
-              })}
-            </div>
+            <StatusDropDown
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+              availableStatuses={availableStatuses}
+              forUpdate={false}
+            />
 
             <button
               type="submit"
