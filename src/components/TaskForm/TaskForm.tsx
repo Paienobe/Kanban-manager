@@ -3,6 +3,7 @@ import {
   addDynamicInput,
   detectOutsideClick,
   getCurrentColumn,
+  getEditedTaskSubtaskStatus,
   getViewedTask,
 } from "../../utils/utils";
 import uuid from "react-uuid";
@@ -35,7 +36,7 @@ const TaskForm = ({
   const viewedTask = getViewedTask(currentColumn!, selectedTask);
 
   const currentTaskSubtasks = viewedTask?.subtasks.map((subtask) => {
-    return { id: uuid(), value: subtask.title };
+    return { id: subtask.id, value: subtask.title };
   });
 
   const defaultSubtasks = [{ id: uuid(), value: "" }];
@@ -75,7 +76,7 @@ const TaskForm = ({
         status: selectedStatus,
         statusId: uuid(),
         subtasks: subtaskInputs.map((input) => {
-          return { title: input.value, isCompleted: false };
+          return { id: uuid(), title: input.value, isCompleted: false };
         }),
       };
 
@@ -84,6 +85,79 @@ const TaskForm = ({
         columns: currentBoard.columns.map((column) => {
           if (column.name === selectedStatus) {
             return { ...column, tasks: [...column.tasks, newTask] };
+          } else return column;
+        }),
+      };
+
+      const updatedAppData = {
+        ...appData,
+        boards: appData.boards.map((board) => {
+          if (board.id === currentBoard.id) {
+            return updatedCurrentBoard;
+          } else return board;
+        }),
+      };
+
+      setAppData(updatedAppData);
+      setShowTaskForm(false);
+    }
+  };
+
+  const editCurrentTask = () => {
+    if (formRef.current) {
+      const editedTask: Task = {
+        id: viewedTask?.id!,
+        title: formRef.current.task_title.value,
+        description: formRef.current.task_description.value,
+        status: selectedStatus,
+        statusId: viewedTask?.statusId!,
+        subtasks: subtaskInputs.map((input) => {
+          return {
+            id: input.id,
+            title: input.value,
+            isCompleted: getEditedTaskSubtaskStatus(viewedTask!, input.id),
+          };
+        }),
+      };
+
+      const updatedCurrentBoard = {
+        ...currentBoard,
+        columns: currentBoard.columns.map((column) => {
+          const columnHasEditedTask = column.tasks.some((task) => {
+            return task.id === editedTask.id;
+          });
+
+          if (columnHasEditedTask) {
+            const originalTask = column.tasks.find((task) => {
+              return task.id === editedTask.id;
+            });
+
+            const taskStaysInColumn =
+              editedTask.status === originalTask?.status;
+
+            if (taskStaysInColumn) {
+              return {
+                ...column,
+                tasks: column.tasks.map((task) => {
+                  if (task.id === editedTask.id) {
+                    return editedTask;
+                  } else return task;
+                }),
+              };
+            } else
+              return {
+                ...column,
+                tasks: column.tasks.filter((task) => {
+                  return task.id !== editedTask.id;
+                }),
+              };
+
+            // column.tasks.map((task) =>)
+          } else if (
+            !columnHasEditedTask &&
+            editedTask.status === column.name
+          ) {
+            return { ...column, tasks: [...column.tasks, editedTask] };
           } else return column;
         }),
       };
@@ -121,7 +195,7 @@ const TaskForm = ({
           ref={formRef}
           onSubmit={(e) => {
             e.preventDefault();
-            createNewTask();
+            !editTask ? createNewTask() : editCurrentTask();
           }}
         >
           <div className="relative">
@@ -161,7 +235,6 @@ const TaskForm = ({
             <textarea
               name="task_description"
               placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
-              required
               rows={3}
               defaultValue={!editTask ? "" : viewedTask?.description}
               className={`p-2 rounded bg-transparent border w-full text-lightModeTitle dark:text-darkModeTitle outline-none ${

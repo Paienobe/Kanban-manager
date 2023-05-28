@@ -1,4 +1,5 @@
 export type Subtask = {
+  id: string | number;
   title: string;
   isCompleted: boolean;
 };

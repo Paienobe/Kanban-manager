@@ -8,8 +8,6 @@ import {
   getViewedTask,
 } from "../../utils/utils";
 import uuid from "react-uuid";
-import checkMark from "../../assets/icon-check.svg";
-import downIcon from "../../assets/icon-chevron-down.svg";
 import {
   AppDataType,
   Board,
@@ -62,8 +60,6 @@ const TaskModal = ({
   const availableStatuses = currentBoard.columns.map((column) => {
     return column.name;
   });
-
-  const [showStatuses, setShowStatuses] = useState(false);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
 

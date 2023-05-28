@@ -1,5 +1,5 @@
 import React from "react";
-import { Board, Column, DynamicInput, SelectedTask, Subtask } from "../types/types";
+import { Board, Column, DynamicInput, SelectedTask, Subtask, Task } from "../types/types";
 import uuid from "react-uuid";
 
 export const getCompletedSubtasks = (subtasks: Subtask[]) => {
@@ -103,4 +103,14 @@ export const getViewedTask = (currentColumn: Column, selectedTask: SelectedTask)
   return currentColumn?.tasks.find((task) => {
     return task.id === selectedTask.id;
   });
+}
+
+export const getEditedTaskSubtaskStatus = (task: Task, id: (string | number)) => {
+  const requiredSubtask = task.subtasks.find((subtask) => {
+    return subtask.id === id
+  })
+
+  if (requiredSubtask) {
+    return requiredSubtask.isCompleted
+  } else return false
 }
