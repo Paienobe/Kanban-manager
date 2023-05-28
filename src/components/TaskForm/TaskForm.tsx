@@ -303,7 +303,7 @@ const TaskForm = ({
               type="submit"
               className="block w-full bg-purple text-white py-2 rounded-full mt-2 font-semibold"
             >
-              Create Task
+              {!editTask ? "Create Task" : "Save Changes"}
             </button>
           </div>
         </form>
