@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import moreIcon from "../../assets/icon-vertical-ellipsis.svg";
-import { detectOutsideClick, getCompletedSubtasks } from "../../utils/utils";
+import {
+  detectOutsideClick,
+  getCompletedSubtasks,
+  getCurrentColumn,
+  getViewedTask,
+} from "../../utils/utils";
 import uuid from "react-uuid";
-import checkMark from "../../assets/icon-check.svg";
-import downIcon from "../../assets/icon-chevron-down.svg";
 import {
   AppDataType,
   Board,
@@ -13,17 +16,23 @@ import {
   Subtask,
   Task,
 } from "../../types/types";
+import StatusDropDown from "../StatusDropdown/StatusDropDown";
+import TaskToggle from "../TaskToggle/TaskToggle";
 
 type Props = {
   showViewModal: boolean;
   setShowViewModal: React.Dispatch<React.SetStateAction<boolean>>;
   selectedTask: SelectedTask;
+  setShowTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedTask: React.Dispatch<React.SetStateAction<SelectedTask>>;
 };
 
 const TaskModal = ({
   showViewModal,
   setShowViewModal,
   selectedTask,
+  setShowTaskForm,
+  setSelectedTask,
 }: Props) => {
   const {
     currentBoard,
@@ -31,21 +40,16 @@ const TaskModal = ({
     appData,
     setShowDeleteModal,
     setDeleteItem,
+    setEditTask,
   } = useGlobalContext()!;
 
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const [showOptions, setShowOptions] = useState(false);
 
-  const currentColumn = currentBoard.columns.find((column) => {
-    return column.tasks.find((task) => {
-      return task.id === selectedTask!.id;
-    });
-  });
+  const currentColumn = getCurrentColumn(currentBoard, selectedTask);
 
-  const viewedTask = currentColumn?.tasks.find((task) => {
-    return task.id === selectedTask.id;
-  });
+  const viewedTask = getViewedTask(currentColumn!, selectedTask);
 
   const completedSubtasks = getCompletedSubtasks(
     viewedTask?.subtasks!
@@ -56,8 +60,6 @@ const TaskModal = ({
   const availableStatuses = currentBoard.columns.map((column) => {
     return column.name;
   });
-
-  const [showStatuses, setShowStatuses] = useState(false);
 
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -161,6 +163,8 @@ const TaskModal = ({
     };
   }, [showOptions]);
 
+  const chosenTask = { id: viewedTask?.id!, status: viewedTask?.status! };
+
   return (
     <div
       className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
@@ -189,9 +193,14 @@ const TaskModal = ({
             >
               <p
                 className="text-subtextColor font-medium pb-2"
-                onClick={() => setShowViewModal(false)}
+                onClick={() => {
+                  setShowViewModal(false);
+                  setShowTaskForm(true);
+                  setEditTask(true);
+                  setSelectedTask(chosenTask);
+                }}
               >
-                Edit Board
+                Edit Task
               </p>
               <p
                 className="text-red font-medium"
@@ -206,7 +215,7 @@ const TaskModal = ({
                   setShowOptions(false);
                 }}
               >
-                Delete Board
+                Delete Task
               </p>
             </div>
           )}
@@ -223,32 +232,11 @@ const TaskModal = ({
         <div>
           {viewedTask?.subtasks.map((subtask) => {
             return (
-              <div
+              <TaskToggle
                 key={uuid()}
-                className="flex items-center my-2 bg-lightBg dark:bg-darkBg p-3 rounded-md"
-              >
-                <div
-                  className={`min-w-[20px] min-h-[20px] rounded-md ${
-                    subtask.isCompleted
-                      ? "bg-purple"
-                      : "bg-lightTiles dark:bg-darkTiles"
-                  } mr-4 flex items-center justify-center border border-subtextColor border-opacity-30`}
-                  onClick={() => {
-                    updatedSubtask(subtask);
-                  }}
-                >
-                  {subtask.isCompleted && <img src={checkMark} alt="" />}
-                </div>
-                <p
-                  className={`${
-                    subtask.isCompleted
-                      ? "text-subtextColor line-through"
-                      : "text-black dark:text-white"
-                  } font-medium text-sm`}
-                >
-                  {subtask.title}
-                </p>
-              </div>
+                subtask={subtask}
+                updatedSubtask={updatedSubtask}
+              />
             );
           })}
         </div>
@@ -258,41 +246,12 @@ const TaskModal = ({
             Current Status
           </p>
           <div>
-            <div
-              className="border border-purple px-2 py-3 rounded-md my-2 flex items-center justify-between"
-              onClick={() => {
-                setShowStatuses(!showStatuses);
-              }}
-            >
-              <p className="text-lightModeTitle dark:text-darkModeTitle text-sm">
-                {viewedTask?.status}
-              </p>
-              <img src={downIcon} alt="" />
-            </div>
-            <div
-              className={`bg-lightBg dark:bg-darkBg px-2 ${
-                showStatuses ? "py-3" : "py-0"
-              } rounded-md overflow-hidden ${
-                showStatuses
-                  ? "max-h-[1000px] transition-[max-height] duration-300 ease-in"
-                  : "max-h-[0px] transition-[max-height] duration-300 ease-smooth"
-              }`}
-            >
-              {availableStatuses.map((status) => {
-                return (
-                  <p
-                    key={uuid()}
-                    className={`text-subtextColor pb-2 text-sm`}
-                    onClick={() => {
-                      updateTaskColumn(status);
-                      setShowStatuses(!showStatuses);
-                    }}
-                  >
-                    {status}
-                  </p>
-                );
-              })}
-            </div>
+            <StatusDropDown
+              selectedStatus={viewedTask?.status!}
+              availableStatuses={availableStatuses}
+              updateTaskColumn={updateTaskColumn}
+              forUpdate={true}
+            />
           </div>
         </div>
       </div>

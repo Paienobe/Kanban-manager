@@ -8,6 +8,7 @@ import TasksContainer from "./components/TasksContainer/TasksContainer";
 import { useGlobalContext } from "./context/globalContext";
 import TaskForm from "./components/TaskForm/TaskForm";
 import ColumnForm from "./components/ColumnForm/ColumnForm";
+import { SelectedTask } from "./types/types";
 
 function App() {
   const { showDeleteModal, setShowDeleteModal } = useGlobalContext()!;
@@ -15,6 +16,10 @@ function App() {
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showColumnForm, setShowColumnForm] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<SelectedTask>({
+    id: "",
+    status: "",
+  });
 
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
@@ -26,7 +31,12 @@ function App() {
         setShowBoardForm={setShowBoardForm}
       />
 
-      <TasksContainer setShowColumnForm={setShowColumnForm} />
+      <TasksContainer
+        setShowColumnForm={setShowColumnForm}
+        setShowTaskForm={setShowTaskForm}
+        selectedTask={selectedTask}
+        setSelectedTask={setSelectedTask}
+      />
 
       {showBoardsModal && (
         <AllBoardsModal
@@ -54,6 +64,8 @@ function App() {
         <TaskForm
           showTaskForm={showTaskForm}
           setShowTaskForm={setShowTaskForm}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
         />
       )}
 

@@ -9,16 +9,20 @@ import ColumnAdder from "../ColumnAdder/ColumnAdder";
 
 type Props = {
   setShowColumnForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedTask: SelectedTask;
+  setSelectedTask: React.Dispatch<React.SetStateAction<SelectedTask>>;
 };
 
-const TasksContainer = ({ setShowColumnForm }: Props) => {
+const TasksContainer = ({
+  setShowColumnForm,
+  setShowTaskForm,
+  selectedTask,
+  setSelectedTask,
+}: Props) => {
   const { currentBoard } = useGlobalContext()!;
 
   const [showViewModal, setShowViewModal] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<SelectedTask>({
-    id: "",
-    status: "",
-  });
 
   const boardsAreAvailable = currentBoard?.columns.length > 0;
 
@@ -80,6 +84,8 @@ const TasksContainer = ({ setShowColumnForm }: Props) => {
           showViewModal={showViewModal}
           setShowViewModal={setShowViewModal}
           selectedTask={selectedTask}
+          setShowTaskForm={setShowTaskForm}
+          setSelectedTask={setSelectedTask}
         />
       )}
     </div>
