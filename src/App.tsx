@@ -12,7 +12,8 @@ import { SelectedTask } from "./types/types";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
 function App() {
-  const { showDeleteModal, setShowDeleteModal } = useGlobalContext()!;
+  const { showDeleteModal, setShowDeleteModal, currentBoard } =
+    useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -24,7 +25,20 @@ function App() {
 
   const onDragEnd = (result: DropResult) => {
     console.log(result);
+    const { source, destination } = result;
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
   };
+
+  // check for bug related to editing tasks
 
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
