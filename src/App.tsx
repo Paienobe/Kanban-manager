@@ -9,6 +9,7 @@ import { useGlobalContext } from "./context/globalContext";
 import TaskForm from "./components/TaskForm/TaskForm";
 import ColumnForm from "./components/ColumnForm/ColumnForm";
 import { SelectedTask } from "./types/types";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
 function App() {
   const { showDeleteModal, setShowDeleteModal } = useGlobalContext()!;
@@ -21,6 +22,10 @@ function App() {
     status: "",
   });
 
+  const onDragEnd = (result: DropResult) => {
+    console.log(result);
+  };
+
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
       <Navbar
@@ -31,12 +36,15 @@ function App() {
         setShowBoardForm={setShowBoardForm}
       />
 
-      <TasksContainer
-        setShowColumnForm={setShowColumnForm}
-        setShowTaskForm={setShowTaskForm}
-        selectedTask={selectedTask}
-        setSelectedTask={setSelectedTask}
-      />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <TasksContainer
+          setShowColumnForm={setShowColumnForm}
+          setShowTaskForm={setShowTaskForm}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
+          setShowBoardForm={setShowBoardForm}
+        />
+      </DragDropContext>
 
       {showBoardsModal && (
         <AllBoardsModal

@@ -6,10 +6,14 @@ import TaskModal from "../TaskModal/TaskModal";
 import { SelectedTask, Task } from "../../types/types";
 import { columnHexCodes } from "../../constants/constants";
 import ColumnAdder from "../ColumnAdder/ColumnAdder";
+import { Droppable } from "@hello-pangea/dnd";
+import EmptyState from "../EmptyState/EmptyState";
+import ColumnHead from "../ColumnHead/ColumnHead";
 
 type Props = {
   setShowColumnForm: React.Dispatch<React.SetStateAction<boolean>>;
   setShowTaskForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowBoardForm: React.Dispatch<React.SetStateAction<boolean>>;
   selectedTask: SelectedTask;
   setSelectedTask: React.Dispatch<React.SetStateAction<SelectedTask>>;
 };
@@ -17,6 +21,7 @@ type Props = {
 const TasksContainer = ({
   setShowColumnForm,
   setShowTaskForm,
+  setShowBoardForm,
   selectedTask,
   setSelectedTask,
 }: Props) => {
@@ -33,31 +38,36 @@ const TasksContainer = ({
           {currentBoard?.columns.map((column, index) => {
             return (
               <div key={column.id} className="min-w-[90%] mt-[80px]">
-                <div className="flex items-center">
-                  <MdCircle color={columnHexCodes[index]} />
-                  <p className="text-subtextColor text-left ml-2">
-                    {column?.name.toUpperCase()} ({column.tasks.length})
-                  </p>
-                </div>
+                <ColumnHead column={column} index={index} />
 
-                <div
-                  className={`mt-5  ${
-                    column.tasks.length < 1
-                      ? "border-2 border-opacity-30 border-dashed border-subtextColor min-h-[75vh]"
-                      : ""
-                  } rounded-lg`}
-                >
-                  {column.tasks.map((task) => {
+                <Droppable droppableId={column.name}>
+                  {(provided) => {
                     return (
-                      <TaskTile
-                        key={task.id}
-                        task={task}
-                        setShowViewModal={setShowViewModal}
-                        setSelectedTask={setSelectedTask}
-                      />
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                        className={`mt-5  ${
+                          column.tasks.length < 1
+                            ? "border-2 border-opacity-30 border-dashed border-subtextColor min-h-[75vh]"
+                            : ""
+                        } rounded-lg`}
+                      >
+                        {column.tasks.map((task, index) => {
+                          return (
+                            <TaskTile
+                              index={index}
+                              key={task.id}
+                              task={task}
+                              setShowViewModal={setShowViewModal}
+                              setSelectedTask={setSelectedTask}
+                            />
+                          );
+                        })}
+                        {provided.placeholder}
+                      </div>
                     );
-                  })}
-                </div>
+                  }}
+                </Droppable>
               </div>
             );
           })}
@@ -69,14 +79,7 @@ const TasksContainer = ({
           )}
         </>
       ) : (
-        <div className="h-screen flex flex-col items-center justify-center">
-          <p className="text-subtextColor text-lg font-medium">
-            There are no boards. Create a new board to get started.
-          </p>
-          <button className="bg-purple text-white p-2 rounded-full mt-4 w-[60%] font-medium">
-            +Create New Board
-          </button>
-        </div>
+        <EmptyState setShowBoardForm={setShowBoardForm} />
       )}
 
       {showViewModal && (
