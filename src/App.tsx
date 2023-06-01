@@ -10,10 +10,16 @@ import TaskForm from "./components/TaskForm/TaskForm";
 import ColumnForm from "./components/ColumnForm/ColumnForm";
 import { SelectedTask } from "./types/types";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { updateDragAndDropInSameColumn } from "./utils/utils";
 
 function App() {
-  const { showDeleteModal, setShowDeleteModal, currentBoard } =
-    useGlobalContext()!;
+  const {
+    showDeleteModal,
+    setShowDeleteModal,
+    currentBoard,
+    appData,
+    setAppData,
+  } = useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -24,7 +30,6 @@ function App() {
   });
 
   const onDragEnd = (result: DropResult) => {
-    console.log(result);
     const { source, destination } = result;
     if (!destination) {
       return;
@@ -35,6 +40,28 @@ function App() {
       destination.index === source.index
     ) {
       return;
+    }
+
+    const startColumn = currentBoard.columns.find((column) => {
+      return column.name === source.droppableId;
+    });
+
+    const endColumn = currentBoard.columns.find((column) => {
+      return column.name === destination.droppableId;
+    });
+
+    const movedTask = startColumn?.tasks[source.index];
+
+    if (startColumn?.id === endColumn?.id) {
+      const moveData = updateDragAndDropInSameColumn(
+        startColumn,
+        movedTask,
+        destination,
+        currentBoard,
+        appData
+      );
+
+      setAppData(moveData);
     }
   };
 
