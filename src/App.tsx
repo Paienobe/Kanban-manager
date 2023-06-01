@@ -19,6 +19,7 @@ function App() {
     currentBoard,
     appData,
     setAppData,
+    setEditTask,
   } = useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
@@ -28,6 +29,12 @@ function App() {
     id: "",
     status: "",
   });
+
+  useEffect(() => {
+    if (!showTaskForm) {
+      setEditTask(false);
+    }
+  }, [showTaskForm]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -64,8 +71,6 @@ function App() {
       setAppData(moveData);
     }
   };
-
-  // check for bug related to editing tasks
 
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
