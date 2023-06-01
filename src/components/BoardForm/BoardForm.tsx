@@ -14,7 +14,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
   const { appData, setAppData, setCurrentBoardIndex, editBoard, currentBoard } =
     useGlobalContext()!;
 
-  const editableColumns = currentBoard.columns.map((column) => {
+  const editableColumns = currentBoard?.columns.map((column) => {
     return { id: column.id, value: column.name };
   });
 

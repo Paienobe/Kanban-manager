@@ -9,9 +9,21 @@ import { useGlobalContext } from "./context/globalContext";
 import TaskForm from "./components/TaskForm/TaskForm";
 import ColumnForm from "./components/ColumnForm/ColumnForm";
 import { SelectedTask } from "./types/types";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import {
+  updateDragAndDropAcrossColumns,
+  updateDragAndDropInSameColumn,
+} from "./utils/utils";
 
 function App() {
-  const { showDeleteModal, setShowDeleteModal } = useGlobalContext()!;
+  const {
+    showDeleteModal,
+    setShowDeleteModal,
+    currentBoard,
+    appData,
+    setAppData,
+    setEditTask,
+  } = useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -20,6 +32,62 @@ function App() {
     id: "",
     status: "",
   });
+
+  useEffect(() => {
+    if (!showTaskForm) {
+      setEditTask(false);
+    }
+  }, [showTaskForm]);
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+
+    const startColumn = currentBoard.columns.find((column) => {
+      return column.name === source.droppableId;
+    });
+
+    const endColumn = currentBoard.columns.find((column) => {
+      return column.name === destination!.droppableId;
+    });
+
+    const movedTask = startColumn?.tasks[source.index];
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    if (startColumn?.id === endColumn?.id) {
+      const moveData = updateDragAndDropInSameColumn(
+        startColumn,
+        movedTask,
+        destination,
+        currentBoard,
+        appData
+      );
+
+      setAppData(moveData);
+    }
+
+    if (startColumn?.id !== endColumn?.id) {
+      const moveData = updateDragAndDropAcrossColumns(
+        startColumn,
+        endColumn,
+        movedTask,
+        destination,
+        currentBoard,
+        appData
+      );
+
+      setAppData(moveData);
+    }
+  };
 
   return (
     <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
@@ -31,12 +99,15 @@ function App() {
         setShowBoardForm={setShowBoardForm}
       />
 
-      <TasksContainer
-        setShowColumnForm={setShowColumnForm}
-        setShowTaskForm={setShowTaskForm}
-        selectedTask={selectedTask}
-        setSelectedTask={setSelectedTask}
-      />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <TasksContainer
+          setShowColumnForm={setShowColumnForm}
+          setShowTaskForm={setShowTaskForm}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
+          setShowBoardForm={setShowBoardForm}
+        />
+      </DragDropContext>
 
       {showBoardsModal && (
         <AllBoardsModal
