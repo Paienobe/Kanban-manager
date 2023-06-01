@@ -10,7 +10,10 @@ import TaskForm from "./components/TaskForm/TaskForm";
 import ColumnForm from "./components/ColumnForm/ColumnForm";
 import { SelectedTask } from "./types/types";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { updateDragAndDropInSameColumn } from "./utils/utils";
+import {
+  updateDragAndDropAcrossColumns,
+  updateDragAndDropInSameColumn,
+} from "./utils/utils";
 
 function App() {
   const {
@@ -38,6 +41,17 @@ function App() {
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
+
+    const startColumn = currentBoard.columns.find((column) => {
+      return column.name === source.droppableId;
+    });
+
+    const endColumn = currentBoard.columns.find((column) => {
+      return column.name === destination!.droppableId;
+    });
+
+    const movedTask = startColumn?.tasks[source.index];
+
     if (!destination) {
       return;
     }
@@ -49,19 +63,22 @@ function App() {
       return;
     }
 
-    const startColumn = currentBoard.columns.find((column) => {
-      return column.name === source.droppableId;
-    });
-
-    const endColumn = currentBoard.columns.find((column) => {
-      return column.name === destination.droppableId;
-    });
-
-    const movedTask = startColumn?.tasks[source.index];
-
     if (startColumn?.id === endColumn?.id) {
       const moveData = updateDragAndDropInSameColumn(
         startColumn,
+        movedTask,
+        destination,
+        currentBoard,
+        appData
+      );
+
+      setAppData(moveData);
+    }
+
+    if (startColumn?.id !== endColumn?.id) {
+      const moveData = updateDragAndDropAcrossColumns(
+        startColumn,
+        endColumn,
         movedTask,
         destination,
         currentBoard,
