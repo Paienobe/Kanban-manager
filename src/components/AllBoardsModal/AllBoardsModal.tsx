@@ -29,13 +29,13 @@ const AllBoardsModal = ({
 
   return (
     <div
-      className="fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed md:static md:max-h-[100vh] md:min-w-[40%] top-0 bottom-0 left-0 right-0 flex items-center justify-center md:items-start md:pt-[100px] bg-black bg-opacity-50 md:bg-white md:dark:bg-darkTiles border border-transparent md:border-r-subtextColor md:border-opacity-30"
       onClick={(e) =>
         detectOutsideClick(e, modalRef, showBoardsModal, setShowBoardsModal)
       }
     >
       <div
-        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl w-[90%] text-left"
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl w-[90%] md:w-full text-left"
         ref={modalRef}
       >
         <p className="text-subtextColor font-semibold text-lg pl-4 mb-2">

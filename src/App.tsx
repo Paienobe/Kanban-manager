@@ -90,7 +90,7 @@ function App() {
   };
 
   return (
-    <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
+    <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out md:flex md:max-h-[100vh] md:overflow-auto">
       <Navbar
         showBoardsModal={showBoardsModal}
         setShowBoardsModal={setShowBoardsModal}
@@ -98,16 +98,6 @@ function App() {
         showBoardForm={showBoardForm}
         setShowBoardForm={setShowBoardForm}
       />
-
-      <DragDropContext onDragEnd={onDragEnd}>
-        <TasksContainer
-          setShowColumnForm={setShowColumnForm}
-          setShowTaskForm={setShowTaskForm}
-          selectedTask={selectedTask}
-          setSelectedTask={setSelectedTask}
-          setShowBoardForm={setShowBoardForm}
-        />
-      </DragDropContext>
 
       {showBoardsModal && (
         <AllBoardsModal
@@ -146,6 +136,16 @@ function App() {
           setShowColumnForm={setShowColumnForm}
         />
       )}
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <TasksContainer
+          setShowColumnForm={setShowColumnForm}
+          setShowTaskForm={setShowTaskForm}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
+          setShowBoardForm={setShowBoardForm}
+        />
+      </DragDropContext>
     </div>
   );
 }

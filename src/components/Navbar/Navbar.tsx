@@ -53,12 +53,12 @@ const Navbar = ({
   }, [showBoardForm]);
 
   return (
-    <div className="p-4 py-6 md:py-0 bg-lightTiles dark:bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30 transition-[background] duration-300 ease-in-out">
+    <div className="p-4 md:px-0 py-6 md:py-0 bg-lightTiles dark:bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30 transition-[background] duration-300 ease-in-out">
       <div className="w-[10%] md:hidden">
         <img src={mobileLogo} alt="" />
       </div>
 
-      <div className="hidden md:block w-[40%] border border-transparent border-r-subtextColor border-opacity-30 py-8">
+      <div className="hidden md:block w-[40%] border border-transparent border-r-subtextColor border-opacity-30 py-8 px-4">
         <img src={desktopLogo} alt="" />
       </div>
 
@@ -83,7 +83,7 @@ const Navbar = ({
         />
       </div>
 
-      <div className="w-[20%] md:w-[23%] flex items-center justify-between">
+      <div className="w-[20%] md:w-[23%] flex items-center justify-between md:px-4">
         <div
           className="bg-purple p-2 w-[70%] md:hidden rounded-xl flex items-center justify-center"
           onClick={() => setShowTaskForm(true)}
