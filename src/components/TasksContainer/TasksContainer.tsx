@@ -37,7 +37,10 @@ const TasksContainer = ({
         <>
           {currentBoard?.columns.map((column, index) => {
             return (
-              <div key={column.id} className="min-w-[90%] mt-[80px]">
+              <div
+                key={column.id}
+                className="min-w-[90%] mt-[80px] md:min-w-[45%]"
+              >
                 <ColumnHead column={column} index={index} />
 
                 <Droppable droppableId={column.name}>
