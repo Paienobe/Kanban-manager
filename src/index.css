@@ -6,4 +6,18 @@
 * {
   font-family: "Raleway", sans-serif;
   scroll-behavior: smooth;
+  transition: all 0.25s ease-in-out;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #625fc733;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #635fc7;
+  }
 }

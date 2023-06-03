@@ -1,11 +1,9 @@
 import React, { useRef } from "react";
 import { useGlobalContext } from "../../context/globalContext";
-import boardIcon from "../../assets/icon-board.svg";
 import { ReactComponent as BoardIcon } from "../../assets/icon-board.svg";
-import { ReactComponent as SunIcon } from "../../assets/icon-light-theme.svg";
-import { ReactComponent as MoonIcon } from "../../assets/icon-dark-theme.svg";
 import { detectOutsideClick } from "../../utils/utils";
-import { MdCircle } from "react-icons/md";
+import ThemeSwitch from "../ThemeSwitch/ThemeSwitch";
+import BoardListItem from "../BoardListItem/BoardListItem";
 
 type Props = {
   showBoardsModal: boolean;
@@ -18,14 +16,10 @@ const AllBoardsModal = ({
   setShowBoardsModal,
   setShowBoardForm,
 }: Props) => {
-  const { appData, currentBoardIndex, setCurrentBoardIndex, theme, setTheme } =
+  const { appData, currentBoardIndex, setCurrentBoardIndex } =
     useGlobalContext()!;
   const totalBoards = appData.boards.length;
   const modalRef = useRef<HTMLDivElement | null>(null);
-
-  const toggleTheme = () => {
-    theme === "dark" ? setTheme("light") : setTheme("dark");
-  };
 
   return (
     <div
@@ -35,71 +29,42 @@ const AllBoardsModal = ({
       }
     >
       <div
-        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl w-[90%] md:w-full text-left"
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl md:rounded-none w-[90%] md:w-full text-left md:h-[100%] md:flex md:flex-col md:justify-between"
         ref={modalRef}
       >
-        <p className="text-subtextColor font-semibold text-lg pl-4 mb-2">
-          ALL BOARDS ({totalBoards})
-        </p>
-
         <div>
-          {appData.boards.map((board, index) => {
-            return (
-              <div
-                key={board.id}
-                className={`flex items-center ${
-                  currentBoardIndex === index ? "bg-purple" : "bg-transparent"
-                } w-[95%] pl-4 py-3 rounded-tr-full rounded-br-full`}
-                onClick={() => {
-                  setCurrentBoardIndex(index);
-                  setShowBoardsModal(false);
-                }}
-              >
-                <BoardIcon
-                  style={{ marginRight: "1rem" }}
-                  fill={currentBoardIndex === index ? "white" : "#828fa3"}
+          <p className="text-subtextColor font-semibold text-lg pl-4 mb-2">
+            ALL BOARDS ({totalBoards})
+          </p>
+
+          <div>
+            {appData.boards.map((board, index) => {
+              return (
+                <BoardListItem
+                  key={board.id}
+                  board={board}
+                  index={index}
+                  setShowBoardsModal={setShowBoardsModal}
                 />
-                <p
-                  className={`${
-                    currentBoardIndex === index
-                      ? "text-white"
-                      : "text-subtextColor"
-                  }`}
-                >
-                  {board.name}
-                </p>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          <div
-            className="flex items-center ml-4 my-2"
-            onClick={() => {
-              setShowBoardsModal(false);
-              setShowBoardForm(true);
-            }}
-          >
-            <BoardIcon className="mr-4  my-3" fill="#635fc7" />
-            <p className="text-purple">+Create New Board</p>
+            <div
+              className="flex items-center ml-4 my-2 cursor-pointer"
+              onClick={() => {
+                setShowBoardsModal(false);
+                setShowBoardForm(true);
+              }}
+            >
+              <BoardIcon className="mr-4  my-3" fill="#635fc7" />
+              <p className="text-purple md:font-semibold md:hover:scale-105">
+                +Create New Board
+              </p>
+            </div>
           </div>
         </div>
 
-        <div
-          className="flex items-center justify-between mx-4 my-2 bg-lightBg dark:bg-darkBg py-4 rounded-xl px-14"
-          onClick={toggleTheme}
-        >
-          <MoonIcon />
-          <div className="bg-purple w-16 p-1 rounded-full">
-            <MdCircle
-              size={20}
-              color="white"
-              className={`${
-                theme === "dark" ? "mr-[50%]" : "ml-[65%]"
-              } transition-all duration-300 ease-in-out`}
-            />
-          </div>
-          <SunIcon />
-        </div>
+        <ThemeSwitch />
       </div>
     </div>
   );

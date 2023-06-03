@@ -91,14 +91,17 @@ const Navbar = ({
           <img src={addIcon} alt="" />
         </div>
 
-        <button className="hidden md:block w-[85%] bg-purple text-white text-sm py-2 rounded-full font-semibold">
+        <button
+          className="hidden md:block w-[85%] bg-purple text-white text-sm py-2 rounded-full font-semibold"
+          onClick={() => setShowTaskForm(true)}
+        >
           +Add New Task
         </button>
 
         <img src={moreIcon} alt="" onClick={() => setShowOptions(true)} />
         {showOptions && (
           <div
-            className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[4rem] right-4 p-4 rounded-lg text-left w-[50%]"
+            className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[4rem] right-4 p-4 rounded-lg text-left w-[50%] md:w-[25%] md:top-[5rem]"
             ref={optionsRef}
           >
             <p

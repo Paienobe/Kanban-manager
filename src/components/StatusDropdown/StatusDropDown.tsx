@@ -21,7 +21,7 @@ const StatusDropDown = ({
   return (
     <div>
       <div
-        className="border border-purple px-2 py-3 rounded-md my-2 flex items-center justify-between"
+        className="border border-purple px-2 py-3 rounded-md my-2 flex items-center justify-between cursor-pointer"
         onClick={() => {
           setShowStatuses(!showStatuses);
         }}
@@ -45,7 +45,7 @@ const StatusDropDown = ({
           return (
             <p
               key={uuid()}
-              className={`text-subtextColor pb-2 text-sm`}
+              className={`text-subtextColor pb-2 text-sm cursor-pointer hover:text-purple`}
               onClick={() => {
                 if (!forUpdate) {
                   setSelectedStatus?.(status);

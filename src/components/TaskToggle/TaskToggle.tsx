@@ -13,7 +13,7 @@ const TaskToggle = ({ subtask, updatedSubtask }: Props) => {
       <div
         className={`min-w-[20px] min-h-[20px] rounded-md ${
           subtask.isCompleted ? "bg-purple" : "bg-lightTiles dark:bg-darkTiles"
-        } mr-4 flex items-center justify-center border border-subtextColor border-opacity-30`}
+        } mr-4 flex items-center justify-center border border-subtextColor border-opacity-30 cursor-pointer`}
         onClick={() => {
           updatedSubtask(subtask);
         }}
