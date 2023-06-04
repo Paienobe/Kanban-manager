@@ -14,9 +14,6 @@ type Props = {
   setShowBoardForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-// fix delete modal
-// give smooth scrool
-
 const AllBoardsModal = ({
   showBoardsModal,
   setShowBoardsModal,
