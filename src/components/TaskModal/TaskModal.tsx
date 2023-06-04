@@ -189,7 +189,7 @@ const TaskModal = ({
 
           {showOptions && (
             <div
-              className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[12rem] right-8 p-4 rounded-lg text-left w-[50%] md:w-[25%] md:right-[20vw] lg:right-[28.5vw]"
+              className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[12rem] right-8 p-4 rounded-lg text-left w-[50%] md:w-[25%] md:right-[20vw] lg:right-[31.5vw]"
               ref={optionsRef}
             >
               <p

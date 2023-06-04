@@ -217,3 +217,11 @@ export const getPreservedAppData = () => {
     return kanbanData;
   } else return data;
 };
+
+export const getPreservedBoardIndex = () => {
+  let localData = localStorage.getItem("kanban_board_index");
+  if (localData) {
+    const index: number = JSON.parse(localData);
+    return index;
+  } else return 0;
+};

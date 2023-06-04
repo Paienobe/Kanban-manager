@@ -8,7 +8,14 @@ type Props = {
 };
 
 const DeleteModal = ({ showDeleteModal, setShowDeleteModal }: Props) => {
-  const { currentBoard, appData, setAppData, deleteItem } = useGlobalContext()!;
+  const {
+    currentBoard,
+    appData,
+    setAppData,
+    deleteItem,
+    currentBoardIndex,
+    setCurrentBoardIndex,
+  } = useGlobalContext()!;
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   const deleteCurrentBoard = () => {
@@ -17,7 +24,7 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal }: Props) => {
     });
 
     const updatedAppData = { boards: updatedBoards };
-
+    setCurrentBoardIndex(currentBoardIndex - 1);
     setAppData(updatedAppData);
   };
 

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import data from "../data/data.json";
 import { AppDataType, Board, DeleteType, Task } from "../types/types";
-import { getPreservedAppData } from "../utils/utils";
+import { getPreservedAppData, getPreservedBoardIndex } from "../utils/utils";
 
 type ContextType = {
   appData: AppDataType;
@@ -31,7 +31,9 @@ type ProviderProps = { children: React.ReactNode };
 
 const AppProvider = ({ children }: ProviderProps) => {
   const [appData, setAppData] = useState<AppDataType>(getPreservedAppData());
-  const [currentBoardIndex, setCurrentBoardIndex] = useState(0);
+  const [currentBoardIndex, setCurrentBoardIndex] = useState(
+    getPreservedBoardIndex()
+  );
   const currentBoard = appData.boards[currentBoardIndex];
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -58,6 +60,17 @@ const AppProvider = ({ children }: ProviderProps) => {
   const preserveAppData = () => {
     localStorage.setItem("kanban_data", JSON.stringify(appData));
   };
+
+  const preserveBoardIndex = () => {
+    localStorage.setItem(
+      "kanban_board_index",
+      JSON.stringify(currentBoardIndex)
+    );
+  };
+
+  useEffect(() => {
+    preserveBoardIndex();
+  }, [currentBoardIndex]);
 
   useEffect(() => {
     preserveAppData();
