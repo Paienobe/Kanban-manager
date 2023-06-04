@@ -65,7 +65,7 @@ const Navbar = ({
           <img src={mobileLogo} alt="" />
         </div>
 
-        <div className="hidden md:block w-[320px] max-w-[320px] border border-transparent border-r-subtextColor border-opacity-30 py-8 px-4">
+        <div className="hidden md:block min-w-[320px] max-w-[320px] border border-transparent border-r-subtextColor border-opacity-30 py-8 px-4">
           <img src={desktopLogo} alt="" />
         </div>
       </>

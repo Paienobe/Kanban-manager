@@ -26,8 +26,9 @@ const AllBoardsModal = ({
   return (
     <div
       className={`fixed ${
-        hideSidebar ? "md:static hide_sidebar" : "md:static show_sidebar"
-      }  md:max-h-[100%] md:min-h-[100%] md:mt-auto mggggd:min-w-[40%] md:min-w-[320px] md:max-w-[320px] top-0 bottom-0 left-0 right-0 flex items-center justify-center md:items-start md:pt-0 bg-black bg-opacity-50 md:bg-white md:dark:bg-darkTiles border border-transparent md:border-r-subtextColor md:border-opacity-30 box-border`}
+        isLarge &&
+        (hideSidebar ? "md:static hide_sidebar" : "md:static show_sidebar")
+      }  md:max-h-[100%] md:min-h-[100%] md:mt-auto md:min-w-[320px] md:max-w-[320px] top-0 bottom-0 left-0 right-0 flex items-center justify-center md:items-start md:pt-0 bg-black bg-opacity-50 md:bg-white md:dark:bg-darkTiles border border-transparent md:border-r-subtextColor md:border-opacity-30 box-border`}
       onClick={(e) =>
         detectOutsideClick(e, modalRef, showBoardsModal, setShowBoardsModal)
       }
