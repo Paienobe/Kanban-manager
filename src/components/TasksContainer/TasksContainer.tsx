@@ -33,7 +33,7 @@ const TasksContainer = ({
     <div
       className={`p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen md:box-border ${
         hideSidebar ? "md:overflow-visible" : ""
-      }`}
+      } m-auto`}
     >
       {boardsAreAvailable ? (
         <>

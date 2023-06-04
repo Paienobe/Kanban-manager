@@ -6,7 +6,7 @@ type Props = {
 
 const EmptyState = ({ setShowBoardForm }: Props) => {
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <div className="h-screen md:max-h-[calc(100vh-92px)] flex flex-col items-center justify-center">
       <p className="text-subtextColor text-lg font-medium">
         There are no boards. Create a new board to get started.
       </p>
