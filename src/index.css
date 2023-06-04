@@ -27,7 +27,7 @@
 }
 
 .show_sidebar {
-  animation: show 0.25s forwards ease-in-out;
+  animation: show 2s forwards ease-in-out;
 }
 
 @keyframes hide {
@@ -53,31 +53,35 @@
   }
 }
 
-/* @keyframes show {
-  20% {
-    min-width: 100%;
-    opacity: 0.5;
+@keyframes show {
+  /* 0% {
+    min-width: 0px;
+  } */
+
+  25% {
+    min-width: 50px;
+    /* opacity: 0; */
   }
 
   50% {
-    min-width: 10%;
-    opacity: 0.75;
+    min-width: 100px;
+    /* opacity: 0; */
   }
 
-  70% {
-    min-width: 15%;
-    opacity: 0.85;
+  75% {
+    min-width: 250px;
+    /* opacity: 0.025; */
   }
 
   100% {
-    min-width: 40%;
+    min-width: 320px;
     opacity: 1;
     position: static;
     z-index: 0;
   }
-} */
+}
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .hide_sidebar,
   .show_sidebar {
     max-width: 320px;

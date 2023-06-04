@@ -72,7 +72,7 @@ const DeleteModal = ({ showDeleteModal, setShowDeleteModal }: Props) => {
       }}
     >
       <div
-        className="bg-lightTiles dark:bg-darkTiles p-4 rounded-xl w-[90%] text-left max-h-[85vh] overflow-y-auto"
+        className="bg-lightTiles dark:bg-darkTiles p-4 rounded-xl w-[90%] md:w-[65%] lg:w-[45%] lg:max-w-[501px] text-left max-h-[85vh] overflow-y-auto"
         ref={modalRef}
       >
         <h1 className="text-xl font-semibold mb-2 text-red">
