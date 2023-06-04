@@ -29,6 +29,8 @@ const Navbar = ({
     setShowDeleteModal,
     setEditBoard,
     theme,
+    isLarge,
+    setIsLarge,
   } = useGlobalContext()!;
   const currentBoardName = currentBoard?.name || "No Board Found";
   const [showOptions, setShowOptions] = useState(false);
@@ -51,6 +53,10 @@ const Navbar = ({
       setEditBoard(false);
     }
   }, [showBoardForm]);
+
+  useEffect(() => {
+    isLarge ? setShowBoardsModal(true) : setShowBoardsModal(true);
+  }, [window.innerWidth]);
 
   return (
     <div className="p-4 md:px-0 py-6 md:py-0 bg-lightTiles dark:bg-darkTiles flex items-center justify-between fixed top-0 left-0 right-0 border-subtextColor border border-x-0 border-t-0 border-opacity-30 transition-[background] duration-300 ease-in-out">
@@ -98,7 +104,12 @@ const Navbar = ({
           +Add New Task
         </button>
 
-        <img src={moreIcon} alt="" onClick={() => setShowOptions(true)} />
+        <img
+          src={moreIcon}
+          alt=""
+          className="cursor-pointer"
+          onClick={() => setShowOptions(true)}
+        />
         {showOptions && (
           <div
             className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[4rem] right-4 p-4 rounded-lg text-left w-[50%] md:w-[25%] md:top-[5rem]"

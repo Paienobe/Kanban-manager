@@ -18,6 +18,10 @@ type ContextType = {
   setEditBoard: React.Dispatch<React.SetStateAction<boolean>>;
   editTask: boolean;
   setEditTask: React.Dispatch<React.SetStateAction<boolean>>;
+  isLarge: boolean;
+  setIsLarge: React.Dispatch<React.SetStateAction<boolean>>;
+  hideSidebar: boolean;
+  toggleSidebar: () => void;
 };
 
 const AppContext = createContext<ContextType | null>(null);
@@ -37,6 +41,12 @@ const AppProvider = ({ children }: ProviderProps) => {
   });
   const [editBoard, setEditBoard] = useState(false);
   const [editTask, setEditTask] = useState(false);
+  const [isLarge, setIsLarge] = useState(window.innerWidth >= 768);
+  const [hideSidebar, setHideSidebar] = useState(false);
+
+  const toggleSidebar = () => {
+    setHideSidebar(!hideSidebar);
+  };
 
   useEffect(() => {
     const documentElement = document.documentElement;
@@ -62,6 +72,10 @@ const AppProvider = ({ children }: ProviderProps) => {
         setEditBoard,
         editTask,
         setEditTask,
+        isLarge,
+        setIsLarge,
+        hideSidebar,
+        toggleSidebar,
       }}
     >
       {children}

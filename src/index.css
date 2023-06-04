@@ -21,3 +21,58 @@
     background: #635fc7;
   }
 }
+
+.hide_sidebar {
+  animation: hide 0.25s forwards ease-in-out;
+}
+
+.show_sidebar {
+  animation: show 0.25s forwards ease-in-out;
+}
+
+@keyframes hide {
+  20% {
+    min-width: 20vw;
+    opacity: 0.5;
+  }
+
+  50% {
+    min-width: 15vw;
+    opacity: 0.75;
+  }
+
+  70% {
+    min-width: 10vw;
+    opacity: 0;
+  }
+
+  100% {
+    min-width: 0vw;
+    opacity: 0;
+    z-index: -20;
+  }
+}
+
+/* @keyframes show {
+  20% {
+    min-width: 100%;
+    opacity: 0.5;
+  }
+
+  50% {
+    min-width: 10%;
+    opacity: 0.75;
+  }
+
+  70% {
+    min-width: 15%;
+    opacity: 0.85;
+  }
+
+  100% {
+    min-width: 40%;
+    opacity: 1;
+    position: static;
+    z-index: 0;
+  }
+} */

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReactComponent as BoardIcon } from "../../assets/icon-board.svg";
 import { useGlobalContext } from "../../context/globalContext";
 import { Board } from "../../types/types";
@@ -10,7 +10,8 @@ type Props = {
 };
 
 const BoardListItem = ({ board, index, setShowBoardsModal }: Props) => {
-  const { currentBoardIndex, setCurrentBoardIndex } = useGlobalContext()!;
+  const { currentBoardIndex, setCurrentBoardIndex, isLarge } =
+    useGlobalContext()!;
   return (
     <div
       className={`flex items-center ${
@@ -20,7 +21,7 @@ const BoardListItem = ({ board, index, setShowBoardsModal }: Props) => {
       } w-[95%] pl-4 py-3 rounded-tr-full rounded-br-full cursor-pointer`}
       onClick={() => {
         setCurrentBoardIndex(index);
-        setShowBoardsModal(false);
+        !isLarge && setShowBoardsModal(false);
       }}
     >
       <BoardIcon
