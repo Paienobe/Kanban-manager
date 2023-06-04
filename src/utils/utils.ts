@@ -10,6 +10,7 @@ import {
 } from "../types/types";
 import uuid from "react-uuid";
 import { DraggableLocation } from "@hello-pangea/dnd";
+import data from "../data/data.json";
 
 export const getCompletedSubtasks = (subtasks: Subtask[]) => {
   const lengthOfSubtasks = subtasks.length;
@@ -207,4 +208,12 @@ export const updateDragAndDropAcrossColumns = (
   };
 
   return updatedAppData;
+};
+
+export const getPreservedAppData = () => {
+  let localData = localStorage.getItem("kanban_data");
+  if (localData) {
+    const kanbanData: AppDataType = JSON.parse(localData);
+    return kanbanData;
+  } else return data;
 };

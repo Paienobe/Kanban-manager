@@ -27,11 +27,11 @@
 }
 
 .show_sidebar {
-  animation: show 0.25s forwards ease-in-out;
+  animation: show 0.2s forwards ease-in-out;
 }
 
 @keyframes hide {
-  20% {
+  25% {
     min-width: 20vw;
     opacity: 0.5;
   }
@@ -41,8 +41,8 @@
     opacity: 0.75;
   }
 
-  70% {
-    min-width: 10vw;
+  75% {
+    min-width: 7.5vw;
     opacity: 0;
   }
 
@@ -53,26 +53,34 @@
   }
 }
 
-/* @keyframes show {
-  20% {
-    min-width: 100%;
-    opacity: 0.5;
+@keyframes show {
+  0% {
+    min-width: 240px;
+  }
+
+  25% {
+    min-width: 260px;
   }
 
   50% {
-    min-width: 10%;
-    opacity: 0.75;
+    min-width: 280px;
   }
 
-  70% {
-    min-width: 15%;
-    opacity: 0.85;
+  75% {
+    min-width: 300px;
   }
 
   100% {
-    min-width: 40%;
+    min-width: 320px;
     opacity: 1;
     position: static;
     z-index: 0;
   }
-} */
+}
+
+@media (min-width: 768px) {
+  .hide_sidebar,
+  .show_sidebar {
+    max-width: 320px;
+  }
+}

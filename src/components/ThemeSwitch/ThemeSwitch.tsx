@@ -10,12 +10,12 @@ const ThemeSwitch = () => {
     theme === "dark" ? setTheme("light") : setTheme("dark");
   };
   return (
-    <div
-      className="flex items-center justify-between mx-4 my-2 bg-lightBg dark:bg-darkBg py-4 rounded-xl px-14"
-      onClick={toggleTheme}
-    >
+    <div className="flex items-center justify-between mx-4 my-2 bg-lightBg dark:bg-darkBg py-4 rounded-xl px-14">
       <MoonIcon />
-      <div className="bg-purple w-16 p-1 rounded-full cursor-pointer">
+      <div
+        className="bg-purple w-16 p-1 rounded-full cursor-pointer"
+        onClick={toggleTheme}
+      >
         <MdCircle
           size={20}
           color="white"

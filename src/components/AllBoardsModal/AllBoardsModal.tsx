@@ -26,14 +26,15 @@ const AllBoardsModal = ({
   return (
     <div
       className={`fixed ${
-        hideSidebar ? "md:static hide_sidebar" : "md:static show_sidebar"
-      }  md:max-h-[100%] md:min-h-[100%] md:mt-auto md:min-w-[40%] top-0 bottom-0 left-0 right-0 flex items-center justify-center md:items-start md:pt-0 bg-black bg-opacity-50 md:bg-white md:dark:bg-darkTiles border border-transparent md:border-r-subtextColor md:border-opacity-30`}
+        isLarge &&
+        (hideSidebar ? "md:static hide_sidebar" : "md:static show_sidebar")
+      }  md:max-h-[100%] md:min-h-[100%] md:mt-auto md:min-w-[320px] md:max-w-[320px] top-0 bottom-0 left-0 right-0 flex items-center justify-center md:items-start md:pt-0 bg-black bg-opacity-50 md:bg-white md:dark:bg-darkTiles border border-transparent md:border-r-subtextColor md:border-opacity-30 box-border`}
       onClick={(e) =>
         detectOutsideClick(e, modalRef, showBoardsModal, setShowBoardsModal)
       }
     >
       <div
-        className={`bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl md:rounded-none w-[90%] md:w-full box-border text-left md:min-h-[calc(100vh-92px)] md:max-h-[calc(100vh-92px)] overflow-y-auto md:flex md:flex-col md:justify-between ${
+        className={`bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out py-4 rounded-xl md:rounded-none w-[90%] md:w-full box-border text-left max-h-[90vh] md:min-h-[calc(100vh-92px)] md:max-h-[calc(100vh-92px)] md:flex md:flex-col md:justify-between ${
           hideSidebar ? "hidden md:w-0" : ""
         }`}
         ref={modalRef}
@@ -44,16 +45,18 @@ const AllBoardsModal = ({
           </p>
 
           <div>
-            {appData.boards.map((board, index) => {
-              return (
-                <BoardListItem
-                  key={board.id}
-                  board={board}
-                  index={index}
-                  setShowBoardsModal={setShowBoardsModal}
-                />
-              );
-            })}
+            <div className="max-h-[calc(90vh-254px)] md:max-h-[calc(93vh-254px)] lg:max-h-[calc(90vh-265px)] overflow-y-auto">
+              {appData.boards.map((board, index) => {
+                return (
+                  <BoardListItem
+                    key={board.id}
+                    board={board}
+                    index={index}
+                    setShowBoardsModal={setShowBoardsModal}
+                  />
+                );
+              })}
+            </div>
 
             <div
               className="flex items-center ml-4 my-2 cursor-pointer md:hover:opacity-50"
