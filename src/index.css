@@ -31,7 +31,7 @@
 }
 
 @keyframes hide {
-  20% {
+  25% {
     min-width: 20vw;
     opacity: 0.5;
   }
@@ -41,8 +41,8 @@
     opacity: 0.75;
   }
 
-  70% {
-    min-width: 10vw;
+  75% {
+    min-width: 7.5vw;
     opacity: 0;
   }
 
