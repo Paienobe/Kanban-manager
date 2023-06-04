@@ -41,7 +41,7 @@ const TasksContainer = ({
             return (
               <div
                 key={column.id}
-                className="min-w-[90%] mt-[80px] md:mt-[100px] md:min-w-[65%]"
+                className="min-w-[90%] mt-[80px] md:mt-[100px] md:min-w-[65%] lg:min-w-[320px] lg:max-w-[320px]"
               >
                 <ColumnHead column={column} index={index} />
 

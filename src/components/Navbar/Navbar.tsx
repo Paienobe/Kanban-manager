@@ -64,11 +64,11 @@ const Navbar = ({
         <img src={mobileLogo} alt="" />
       </div>
 
-      <div className="hidden md:block w-[40%] border border-transparent border-r-subtextColor border-opacity-30 py-8 px-4">
+      <div className="hidden md:block w-[40%] lg:w-[320px] lg:max-w-[320px] border border-transparent border-r-subtextColor border-opacity-30 py-8 px-4">
         <img src={desktopLogo} alt="" />
       </div>
 
-      <div className="w-[70%] md:w-[30%] flex items-center">
+      <div className="w-[70%] md:w-[30%] lg:w-[57%] flex items-center">
         <h1
           className="text-left text-lightModeTitle dark:text-darkModeTitle font-bold text-xl md:text-2xl mr-2"
           onClick={() => {
@@ -89,7 +89,7 @@ const Navbar = ({
         />
       </div>
 
-      <div className="w-[20%] md:w-[23%] flex items-center justify-between md:px-4">
+      <div className="w-[20%] md:w-[23%] lg:w-[15%] flex items-center justify-between md:px-4">
         <div
           className="bg-purple p-2 w-[70%] md:hidden rounded-xl flex items-center justify-center"
           onClick={() => setShowTaskForm(true)}
@@ -116,7 +116,7 @@ const Navbar = ({
             ref={optionsRef}
           >
             <p
-              className="text-subtextColor font-medium pb-2"
+              className="text-subtextColor font-medium pb-2 cursor-pointer"
               onClick={() => {
                 setShowBoardForm(true);
                 setEditBoard(true);
@@ -126,7 +126,7 @@ const Navbar = ({
               Edit Board
             </p>
             <p
-              className="text-red font-medium"
+              className="text-red font-medium cursor-pointer"
               onClick={() => {
                 setShowDeleteModal(true);
                 setDeleteItem({

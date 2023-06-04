@@ -63,7 +63,7 @@ const DynamicInputField = ({
           deleteDynamicInputs(input.id, columnInputs, setColumnInputs)
         }
         size={30}
-        className={`text-subtextColor hover:text-red transition-colors duration-200 ease-in-out ${
+        className={`text-subtextColor hover:text-red cursor-pointer transition-colors duration-200 ease-in-out ${
           itemIsFixed ? "opacity-20" : ""
         }`}
       />

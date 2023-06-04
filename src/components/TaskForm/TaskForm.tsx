@@ -177,7 +177,7 @@ const TaskForm = ({ showTaskForm, setShowTaskForm, selectedTask }: Props) => {
       }}
     >
       <div
-        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] md:w-[65%] text-left max-h-[90vh] overflow-y-auto"
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] md:w-[65%] lg:w-[45%] text-left max-h-[90vh] overflow-y-auto"
         ref={modalRef}
       >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
