@@ -14,6 +14,7 @@ import {
   updateDragAndDropAcrossColumns,
   updateDragAndDropInSameColumn,
 } from "./utils/utils";
+import SidebarViewer from "./components/SidebarViewer/SidebarViewer";
 
 function App() {
   const {
@@ -23,6 +24,8 @@ function App() {
     appData,
     setAppData,
     setEditTask,
+    setIsLarge,
+    hideSidebar,
   } = useGlobalContext()!;
   const [showBoardsModal, setShowBoardsModal] = useState(false);
   const [showBoardForm, setShowBoardForm] = useState(false);
@@ -38,6 +41,13 @@ function App() {
       setEditTask(false);
     }
   }, [showTaskForm]);
+
+  window.addEventListener("resize", () => {
+    if (!(window.innerWidth >= 768)) {
+      setShowBoardsModal(false);
+    }
+    setIsLarge(window.innerWidth >= 768);
+  });
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -90,7 +100,7 @@ function App() {
   };
 
   return (
-    <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out">
+    <div className="App bg-lightBg dark:bg-darkBg min-h-screen transition-all duration-300 ease-in-out md:flex md:max-h-[100vh] md:w-full md:overflow-auto">
       <Navbar
         showBoardsModal={showBoardsModal}
         setShowBoardsModal={setShowBoardsModal}
@@ -98,16 +108,6 @@ function App() {
         showBoardForm={showBoardForm}
         setShowBoardForm={setShowBoardForm}
       />
-
-      <DragDropContext onDragEnd={onDragEnd}>
-        <TasksContainer
-          setShowColumnForm={setShowColumnForm}
-          setShowTaskForm={setShowTaskForm}
-          selectedTask={selectedTask}
-          setSelectedTask={setSelectedTask}
-          setShowBoardForm={setShowBoardForm}
-        />
-      </DragDropContext>
 
       {showBoardsModal && (
         <AllBoardsModal
@@ -146,6 +146,18 @@ function App() {
           setShowColumnForm={setShowColumnForm}
         />
       )}
+
+      {hideSidebar && <SidebarViewer />}
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <TasksContainer
+          setShowColumnForm={setShowColumnForm}
+          setShowTaskForm={setShowTaskForm}
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
+          setShowBoardForm={setShowBoardForm}
+        />
+      </DragDropContext>
     </div>
   );
 }

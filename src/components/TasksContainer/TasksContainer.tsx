@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../context/globalContext";
 import TaskTile from "../TaskTiles/TaskTile";
-import { MdCircle } from "react-icons/md";
 import TaskModal from "../TaskModal/TaskModal";
 import { SelectedTask, Task } from "../../types/types";
-import { columnHexCodes } from "../../constants/constants";
 import ColumnAdder from "../ColumnAdder/ColumnAdder";
 import { Droppable } from "@hello-pangea/dnd";
 import EmptyState from "../EmptyState/EmptyState";
@@ -25,19 +23,26 @@ const TasksContainer = ({
   selectedTask,
   setSelectedTask,
 }: Props) => {
-  const { currentBoard } = useGlobalContext()!;
+  const { currentBoard, hideSidebar } = useGlobalContext()!;
 
   const [showViewModal, setShowViewModal] = useState(false);
 
   const boardsAreAvailable = currentBoard?.columns.length > 0;
 
   return (
-    <div className="p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen">
+    <div
+      className={`p-4 flex gap-x-4 items-start justify-between overflow-x-auto min-h-screen md:box-border ${
+        hideSidebar ? "md:overflow-visible" : ""
+      }`}
+    >
       {boardsAreAvailable ? (
         <>
           {currentBoard?.columns.map((column, index) => {
             return (
-              <div key={column.id} className="min-w-[90%] mt-[80px]">
+              <div
+                key={column.id}
+                className="min-w-[90%] mt-[80px] md:mt-[100px] md:min-w-[65%]"
+              >
                 <ColumnHead column={column} index={index} />
 
                 <Droppable droppableId={column.name}>

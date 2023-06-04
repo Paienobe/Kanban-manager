@@ -173,7 +173,7 @@ const TaskModal = ({
       }}
     >
       <div
-        className="bg-lightTiles dark:bg-darkTiles p-4 rounded-xl w-[90%] text-left max-h-[85vh] overflow-y-auto"
+        className="bg-lightTiles dark:bg-darkTiles p-4 rounded-xl w-[90%] md:w-[65%] text-left max-h-[85vh] overflow-y-auto"
         ref={modalRef}
       >
         <div className="flex items-center justify-between">
@@ -181,6 +181,7 @@ const TaskModal = ({
             {viewedTask?.title}
           </h1>
           <img
+            className="cursor-pointer"
             src={moreIcon}
             alt="more_icon"
             onClick={() => setShowOptions(!showOptions)}
@@ -188,7 +189,7 @@ const TaskModal = ({
 
           {showOptions && (
             <div
-              className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[12rem] right-8 p-4 rounded-lg text-left w-[50%]"
+              className="absolute bg-lightBg border border-subtextColor border-opacity-25 dark:bg-darkBg top-[12rem] right-8 p-4 rounded-lg text-left w-[50%] md:w-[25%] md:right-[20vw]"
               ref={optionsRef}
             >
               <p

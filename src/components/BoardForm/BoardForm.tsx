@@ -120,7 +120,7 @@ const BoardForm = ({ showBoardForm, setShowBoardForm }: Props) => {
     >
       <div
         ref={modalRef}
-        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] text-left max-h-[90vh] overflow-y-auto"
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] md:w-[65%] text-left max-h-[90vh] overflow-y-auto"
       >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
           {!editBoard ? "Add New Board" : "Edit Board"}

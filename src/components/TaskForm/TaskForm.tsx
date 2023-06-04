@@ -7,7 +7,6 @@ import {
   getViewedTask,
 } from "../../utils/utils";
 import uuid from "react-uuid";
-import downIcon from "../../assets/icon-chevron-down.svg";
 import { useGlobalContext } from "../../context/globalContext";
 import { DynamicInput, SelectedTask, Task } from "../../types/types";
 import DynamicInputField from "../DynamicInputField/DynamicInputField";
@@ -20,12 +19,7 @@ type Props = {
   setSelectedTask: React.Dispatch<React.SetStateAction<SelectedTask>>;
 };
 
-const TaskForm = ({
-  showTaskForm,
-  setShowTaskForm,
-  selectedTask,
-  setSelectedTask,
-}: Props) => {
+const TaskForm = ({ showTaskForm, setShowTaskForm, selectedTask }: Props) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -55,7 +49,6 @@ const TaskForm = ({
   const [selectedStatus, setSelectedStatus] = useState(
     editTask ? viewedTask?.status! : availableStatuses[0]
   );
-  const [showStatuses, setShowStatuses] = useState(false);
   const [duplicateTask, setDuplicateTask] = useState(false);
 
   const checkForDuplicateTask = (text: string) => {
@@ -184,7 +177,7 @@ const TaskForm = ({
       }}
     >
       <div
-        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] text-left max-h-[90vh] overflow-y-auto"
+        className="bg-lightTiles dark:bg-darkTiles transition-[background] duration-300 ease-in-out p-4 rounded-xl w-[90%] md:w-[65%] text-left max-h-[90vh] overflow-y-auto"
         ref={modalRef}
       >
         <h1 className="text-lightModeTitle dark:text-darkModeTitle text-xl font-semibold mb-4">
